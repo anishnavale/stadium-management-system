@@ -1,4 +1,5 @@
---DDL-Price, Match, Payment #18
+--DDL commands-Price, Match, Payment #18
+
 
 --price
 create table price_catalog(
