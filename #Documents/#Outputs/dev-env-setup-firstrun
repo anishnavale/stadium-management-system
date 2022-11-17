@@ -1,0 +1,39 @@
+
+Procedure CREATE_DEV_USER compiled
+
+Inputs to the procedure create_dev_user -> (dev1,Gend@1234567890123_old,100)
+Trying to create dev users on Oracle Autonomous Database..
+Checking if user already exists...
+Creating User: dev1
+Granted Roles and Privileges: CONNECT, RESOURCE, CREATE VIEW to dev1
+
+
+PL/SQL procedure successfully completed.
+
+Inputs to the procedure create_dev_user -> (dev2,Gend@1234567890123_old,100)
+Trying to create dev users on Oracle Autonomous Database..
+Checking if user already exists...
+Creating User: dev2
+Granted Roles and Privileges: CONNECT, RESOURCE, CREATE VIEW to dev2
+
+
+PL/SQL procedure successfully completed.
+
+Inputs to the procedure create_dev_user -> (dev3,Gend@1234567890123_old,100)
+Trying to create dev users on Oracle Autonomous Database..
+Checking if user already exists...
+Creating User: dev3
+Granted Roles and Privileges: CONNECT, RESOURCE, CREATE VIEW to dev3
+
+
+PL/SQL procedure successfully completed.
+
+Inputs to the procedure create_dev_user -> (dev4,Gend@1234567890123_old,100)
+Trying to create dev users on Oracle Autonomous Database..
+Checking if user already exists...
+Creating User: dev4
+Granted Roles and Privileges: CONNECT, RESOURCE, CREATE VIEW to dev4
+
+
+PL/SQL procedure successfully completed.
+
