@@ -5,6 +5,7 @@
 create table price_catalog(
 pc_id number(20) NOT NULL,
 match_id number(20),
+sc_id number(20),
 amount number(5,2)
 );
 
