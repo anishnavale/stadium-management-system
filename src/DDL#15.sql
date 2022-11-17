@@ -29,7 +29,8 @@ user_pincode number(10)
 create table seat(
 seat_id number(20) not null,
 seat_row number(3),
-seat_no number(3)
+seat_no number(3),
+sc_id number(20) NOT NULL
 );
 
 desc ticket;
