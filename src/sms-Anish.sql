@@ -1,6 +1,5 @@
 /*select * from session_privs;
 select * from session_roles;
-
 drop table section_category;
 drop table section;
 drop table category;*/
@@ -90,7 +89,7 @@ ALTER TABLE section_category
 ADD CONSTRAINT PK_sc_id Primary key (sc_id);
 
 -- Create Foreign Key constraint for section_id in section_category table
-ALTER TABLE section_category
+ALTER TABLE section_categorys
 ADD CONSTRAINT FK_section_id foreign key (section_id) references section (section_id);
 
 -- Create Foreign Key constraint for category_id in section_category table
