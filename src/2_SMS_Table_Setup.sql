@@ -1,20 +1,3 @@
-/*select * from session_privs;
-select * from session_roles;
-drop table verification;
-drop table ticket;
-drop table refund;
-drop table customer;
-drop table payment;
-drop table discount;
-drop table seat;
-drop table price_catalog;
-drop table match;
-drop table section_category;
-drop table section;
-drop table category;
-*/
-
-
 
 PURGE RECYCLEBIN;
 
@@ -376,6 +359,3 @@ ADD CONSTRAINT FK_ticket_id foreign key (ticket_id) references ticket (ticket_id
 -- Create Not Null constraint for _date_time in verification table
 ALTER TABLE verification
 MODIFY (v_date_time timestamp CONSTRAINT NN_v_date_time NOT NULL);
-
-
-
