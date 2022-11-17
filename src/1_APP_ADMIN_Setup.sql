@@ -29,7 +29,7 @@ select count(1) into userCount from dba_users where username=upper(user_name);
 if userCount>0 then
     dbms_output.put_line('User: '|| user_name || ' already exists!'); 
     dbms_output.put_line('Dropping and Recreating '||'User: '|| user_name || ' with new supplied password');
-    execute immediate 'drop user ' || user_name;
+    execute immediate 'drop user ' || user_name || ' cascade';
 end if;
 
 dbms_output.put_line('Creating User: '|| user_name);
