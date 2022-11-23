@@ -52,4 +52,4 @@ end;
 
 
 --Driver code to create the dev users
-execute create_sms_app_admin_user('app_admin', 'Gend@APPADM@123456789', 100);
+execute create_sms_app_admin_user('app_admin', 'Sms@APPADM@123456789', 100);
