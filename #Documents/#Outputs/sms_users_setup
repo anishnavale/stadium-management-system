@@ -1,0 +1,125 @@
+
+Procedure SETUP_SMS_USERS compiled
+
+---------------------------
+Setting up SMS users
+---------------------------
+Check if user: STADIUM_MANAGER exists already
+Trying to create user: STADIUM_MANAGER
+Created user: STADIUM_MANAGER
+Granted CONNECT to user: STADIUM_MANAGER
+---------------------------
+Check if user: FINANCE_MANAGER exists already
+Trying to create user: FINANCE_MANAGER
+Created user: FINANCE_MANAGER
+Granted CONNECT to user: FINANCE_MANAGER
+---------------------------
+Check if user: CUSTOMER exists already
+Trying to create user: CUSTOMER
+Created user: CUSTOMER
+Granted CONNECT to user: CUSTOMER
+---------------------------
+Check if user: STADIUM_SECURITY exists already
+Trying to create user: STADIUM_SECURITY
+Created user: STADIUM_SECURITY
+Granted CONNECT to user: STADIUM_SECURITY
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+
+Procedure SETUP_SMS_USERS compiled
+
+---------------------------
+Setting up SMS users
+---------------------------
+Check if user: STADIUM_MANAGER exists already
+User: STADIUM_MANAGER exists already
+Dropping and recreating user: STADIUM_MANAGER
+Trying to create user: STADIUM_MANAGER
+Created user: STADIUM_MANAGER
+Granted CONNECT to user: STADIUM_MANAGER
+---------------------------
+Check if user: FINANCE_MANAGER exists already
+User: FINANCE_MANAGER exists already
+Dropping and recreating user: FINANCE_MANAGER
+Trying to create user: FINANCE_MANAGER
+Created user: FINANCE_MANAGER
+Granted CONNECT to user: FINANCE_MANAGER
+---------------------------
+Check if user: CUSTOMER exists already
+User: CUSTOMER exists already
+Dropping and recreating user: CUSTOMER
+Trying to create user: CUSTOMER
+Created user: CUSTOMER
+Granted CONNECT to user: CUSTOMER
+---------------------------
+Check if user: STADIUM_SECURITY exists already
+User: STADIUM_SECURITY exists already
+Dropping and recreating user: STADIUM_SECURITY
+Trying to create user: STADIUM_SECURITY
+Created user: STADIUM_SECURITY
+Granted CONNECT to user: STADIUM_SECURITY
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+
+Procedure SETUP_SMS_USERS compiled
+
+---------------------------
+Setting up SMS users
+---------------------------
+Check if user: STADIUM_MANAGER exists already
+User: STADIUM_MANAGER exists already
+Dropping and recreating user: STADIUM_MANAGER
+Exception Occurred
+Error Code: -1940
+Error Message: ORA-01940: cannot drop a user that is currently connected
+---------------------------
+Error Reason: TRYING TO CREATE SMS USERS THAT ARE ALREADY CONNECTED TO DB, DISCONNECT THEM AND RUN THE SCRIPT AGAIN
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+
+Procedure SETUP_SMS_USERS compiled
+
+---------------------------
+Setting up SMS users
+---------------------------
+Check if user: STADIUM_MANAGER exists already
+User: STADIUM_MANAGER exists already
+Dropping and recreating user: STADIUM_MANAGER
+Trying to create user: STADIUM_MANAGER
+Created user: STADIUM_MANAGER
+Granted CONNECT to user: STADIUM_MANAGER
+---------------------------
+Check if user: FINANCE_MANAGER exists already
+User: FINANCE_MANAGER exists already
+Dropping and recreating user: FINANCE_MANAGER
+Trying to create user: FINANCE_MANAGER
+Created user: FINANCE_MANAGER
+Granted CONNECT to user: FINANCE_MANAGER
+---------------------------
+Check if user: CUSTOMER exists already
+User: CUSTOMER exists already
+Dropping and recreating user: CUSTOMER
+Trying to create user: CUSTOMER
+Created user: CUSTOMER
+Granted CONNECT to user: CUSTOMER
+---------------------------
+Check if user: STADIUM_SECURITY exists already
+User: STADIUM_SECURITY exists already
+Dropping and recreating user: STADIUM_SECURITY
+Trying to create user: STADIUM_SECURITY
+Created user: STADIUM_SECURITY
+Granted CONNECT to user: STADIUM_SECURITY
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
