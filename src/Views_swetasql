@@ -1,0 +1,72 @@
+--3. V_Show_Upcoming_Matches - For CUSTOMERS to see upcoming matches
+create or replace view V_Show_Upcoming_Matches as
+select * from match
+where m_start_time > sysdate;
+
+--6. V_Tickets_With_Discounts - To understand how a discount scheme affected ticket bookings
+
+
+create or replace view V_Tickets_With_Discounts as
+select * from ticket t
+join payment p on t.payment_id = p.payment_id
+join discount d on p.discount_id = d.discount_id
+;
+
+
+
+
+--7. V_Show_Refunded_Tickets - To understand user wise refund detail
+
+create or replace view V_Show_Refunded_Tickets as
+select * from ticket t
+join refund r on r.rfd_id = t.rfd_id
+join customer c on c.cust_id = t.cust_id;
+
+--9. V_Yearly_Monthly_Sales - To understand year and month wise sales
+
+
+create or replace view V_Yearly_Monthly_Sales as
+select to_char(p.p_date_time, 'Mon'), sum(p.tot_amount), count(1) as cnt  from ticket t
+join payment p on t.payment_id = p.payment_id
+group by to_char(p.p_date_time, 'Mon');
+
+---10. V_League_Team_Sales - To understand league and team wise sale
+
+
+create or replace view V_League_Team_Sales as
+select m.league_name, sum(p.tot_amount), count(1) as cnt from match m
+join ticket t on t.match_id = m.match_id
+join payment p on t.payment_id = p.payment_id
+group by m.league_name;
+
+--V_Available_Seats - For CUSTOMERS to review available seats
+
+
+select match_id, total_seat, seat_occupied, total_seat - seat_occupied as remaining_seats from (
+select t.match_id, (select count(distinct seat_id) from seat) total_seat,count(t.seat_id) seat_occupied  from ticket t
+group by t.match_id
+);
+
+select t.match_id, t.ticket_id,s.SEAT_ID,s.SC_ID,s.SEAT_ROW,s.seat_no, 
+case when t.ticket_id  is null then 'N'
+                 else 'Y'
+END as occupied
+from seat s
+left join ticket t on s.seat_id = t.seat_id
+order by match_id;
+
+
+
+
+--8. V_Match_Wise_Attendance - To understand how many people attended match
+
+select m.match_id, count(1) from ticket t
+join verification v on t.ticket_id = v.ticket_id
+join match m on m.match_id = t.match_id
+group by m.match_id;
+
+
+
+select sc.sc_id, s.section_name, c.category_name from section_category sc inner join section s on sc.section_id = s.section_id inner join category c on sc.category_id = c.category_id order by sc.sc_id;
+
+select * from ticket t inner join customer c on t.ticket_id = c.cust_id inner join refund r on r.rfd_id = t.rfd_id inner join match m on t.match_id = m.match_id order by t.ticket_id;
