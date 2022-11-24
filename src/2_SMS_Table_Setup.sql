@@ -291,7 +291,7 @@ ALTER TABLE section_category
 CREATE TABLE seat (
     seat_id  NUMBER(20),
     sc_id    NUMBER(20),
-    seat_row NUMBER(3), 
+    seat_row VARCHAR(3), 
     seat_no  NUMBER(3)
 );
 
@@ -312,7 +312,7 @@ ALTER TABLE seat MODIFY (
 --Aditya
 -- Create Not Null constraint for seat_row in seat table
 ALTER TABLE seat MODIFY (
-    seat_row NUMBER(3)
+    seat_row VARCHAR(3)
         CONSTRAINT nn_sea_seat_row NOT NULL
 );
 
