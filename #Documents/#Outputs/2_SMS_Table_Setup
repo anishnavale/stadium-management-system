@@ -1,0 +1,444 @@
+
+RECYCLEBIN purged.
+
+---------------------------
+CHECKING IF SMS TABLES ALREADY EXISTS
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+---------------------------
+TRYING TO CREATE TABLES
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+
+Table SECTION created.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table CATEGORY created.
+
+
+Table CATEGORY altered.
+
+
+Table CATEGORY altered.
+
+
+Table CATEGORY altered.
+
+
+Table SECTION_CATEGORY created.
+
+
+Table SECTION_CATEGORY altered.
+
+
+Table SECTION_CATEGORY altered.
+
+
+Table SECTION_CATEGORY altered.
+
+
+Table SEAT created.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table MATCH created.
+
+
+Table MATCH altered.
+
+
+Table MATCH altered.
+
+
+Table PRICE_CATALOG created.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table REFUND created.
+
+
+Table REFUND altered.
+
+
+Table REFUND altered.
+
+
+Table CUSTOMER created.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table DISCOUNT created.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table PAYMENT created.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table TICKET created.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table VERIFICATION created.
+
+
+Table VERIFICATION altered.
+
+
+Table VERIFICATION altered.
+
+
+Table VERIFICATION altered.
+
+---------------------------
+ALL THE SMS RELATED TABLES HAVE BEEN CREATED SUCCESSFULLY
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+
+RECYCLEBIN purged.
+
+---------------------------
+CHECKING IF SMS TABLES ALREADY EXISTS
+---------------------------
+Table: VERIFICATION Already exists, dropping it
+Table: TICKET Already exists, dropping it
+Table: REFUND Already exists, dropping it
+Table: PAYMENT Already exists, dropping it
+Table: DISCOUNT Already exists, dropping it
+Table: SEAT Already exists, dropping it
+Table: PRICE_CATALOG Already exists, dropping it
+Table: SECTION_CATEGORY Already exists, dropping it
+Table: CUSTOMER Already exists, dropping it
+Table: SECTION Already exists, dropping it
+Table: CATEGORY Already exists, dropping it
+Table: MATCH Already exists, dropping it
+
+
+PL/SQL procedure successfully completed.
+
+---------------------------
+TRYING TO CREATE TABLES
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+
+Table SECTION created.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table SECTION altered.
+
+
+Table CATEGORY created.
+
+
+Table CATEGORY altered.
+
+
+Table CATEGORY altered.
+
+
+Table CATEGORY altered.
+
+
+Table SECTION_CATEGORY created.
+
+
+Table SECTION_CATEGORY altered.
+
+
+Table SECTION_CATEGORY altered.
+
+
+Table SECTION_CATEGORY altered.
+
+
+Table SEAT created.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table SEAT altered.
+
+
+Table MATCH created.
+
+
+Table MATCH altered.
+
+
+Table MATCH altered.
+
+
+Table PRICE_CATALOG created.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table PRICE_CATALOG altered.
+
+
+Table REFUND created.
+
+
+Table REFUND altered.
+
+
+Table REFUND altered.
+
+
+Table CUSTOMER created.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table CUSTOMER altered.
+
+
+Table DISCOUNT created.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table DISCOUNT altered.
+
+
+Table PAYMENT created.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table PAYMENT altered.
+
+
+Table TICKET created.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table TICKET altered.
+
+
+Table VERIFICATION created.
+
+
+Table VERIFICATION altered.
+
+
+Table VERIFICATION altered.
+
+
+Table VERIFICATION altered.
+
+---------------------------
+ALL THE SMS RELATED TABLES HAVE BEEN CREATED SUCCESSFULLY
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+

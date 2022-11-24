@@ -1,361 +1,601 @@
+--Author: Aditya, Anish, Sweta, Sejal
+--Comments: Script to create SMS Related tables
+--          Note: Run this script logged in as 'APP_ADMIN' user for Oracle Autonomous Database
 
 PURGE RECYCLEBIN;
 
 SET SERVEROUTPUT ON;
 
 DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='VERIFICATION';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE verification';
+    is_true NUMBER;
+BEGIN
+    dbms_output.put_line('---------------------------');
+    dbms_output.put_line('CHECKING IF SMS TABLES ALREADY EXISTS');
+    dbms_output.put_line('---------------------------');
+    
+    --Verification
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'VERIFICATION';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: VERIFICATION Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE VERIFICATION';
+    END IF;
+
+    --Ticket
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'TICKET';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: TICKET Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE TICKET';
+    END IF;
+    
+    --Refund
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'REFUND';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: REFUND Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE REFUND';
+    END IF;
+
+    --Payment
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'PAYMENT';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: PAYMENT Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE PAYMENT';
+    END IF;
+
+    --Discount
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'DISCOUNT';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: DISCOUNT Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE DISCOUNT';
+    END IF;
+
+    --Seat
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'SEAT';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: SEAT Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE SEAT';
+    END IF;
+
+    --Price_Catalog
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'PRICE_CATALOG';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: PRICE_CATALOG Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE PRICE_CATALOG';
+    END IF;
+
+    --Section_Category
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'SECTION_CATEGORY';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: SECTION_CATEGORY Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE SECTION_CATEGORY';
+    END IF;
+
+    --Customer
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'CUSTOMER';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: CUSTOMER Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE CUSTOMER';
+    END IF;
+
+    --Section
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'SECTION';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: SECTION Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE SECTION';
+    END IF;
+
+    --Category
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'CATEGORY';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: CATEGORY Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE CATEGORY';
+    END IF;
+
+    --Match
+    SELECT
+        COUNT(*)
+    INTO is_true
+    FROM
+        user_tables
+    WHERE
+        table_name = 'MATCH';
+
+    IF is_true > 0 THEN
+        dbms_output.put_line('Table: MATCH Already exists, dropping it');
+        EXECUTE IMMEDIATE 'DROP TABLE MATCH';
     END IF;
 END;
 /
 
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='TICKET';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE ticket';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='REFUND';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE refund';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='PAYMENT';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE payment';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='DISCOUNT';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE discount';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='SEAT';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE seat';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='PRICE_CATALOG';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE price_catalog';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='SECTION_CATEGORY';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE section_category';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='CUSTOMER';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE customer';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='SECTION';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE section';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='CATEGORY';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE category';
-    END IF;
-END;
-/
-
-DECLARE
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='MATCH';
-    IF IS_TRUE > 0 THEN
-        EXECUTE IMMEDIATE 'DROP TABLE match';
-    END IF;
+BEGIN
+    dbms_output.put_line('---------------------------');
+    dbms_output.put_line('TRYING TO CREATE TABLES');
+    dbms_output.put_line('---------------------------');
 END;
 /
 
 -- Create table section
-create table section (
-section_id number(20),
-section_name varchar(30),
-gate_name varchar(30),
-gate_street varchar(100),
-gate_city varchar(50),
-gate_state varchar(50),
-gate_pincode number(10)
+CREATE TABLE section (
+    section_id   NUMBER(20),
+    section_name VARCHAR(30),
+    gate_name    VARCHAR(30),
+    gate_street  VARCHAR(100),
+    gate_city    VARCHAR(50),
+    gate_state   VARCHAR(50),
+    gate_pincode NUMBER(10)
 );
 
 -- Create Primary Key constraint for section_id in section table
-ALTER TABLE section
-ADD CONSTRAINT PK_section_id Primary key (section_id);
+ALTER TABLE section ADD CONSTRAINT pk_sec_section_id PRIMARY KEY ( section_id );
 
 -- Create Not Null constraint for section_name in section table
-ALTER TABLE section
-MODIFY (section_name varchar(30) CONSTRAINT NN_section_name NOT NULL);
+ALTER TABLE section MODIFY (
+    section_name VARCHAR(30)
+        CONSTRAINT nn_sec_section_name NOT NULL
+);
+
+--Aditya
+-- Create Not Null constraint for gate_name in section table
+ALTER TABLE section MODIFY (
+    gate_name VARCHAR(30)
+        CONSTRAINT nn_sec_gate_name NOT NULL
+);
+
+-- Create Not Null constraint for gate_street in section table
+ALTER TABLE section MODIFY (
+    gate_street VARCHAR(100)
+        CONSTRAINT nn_sec_gate_street NOT NULL
+);
+
+-- Create Not Null constraint for gate_city in section table
+ALTER TABLE section MODIFY (
+    gate_city VARCHAR(50)
+        CONSTRAINT nn_sec_gate_city NOT NULL
+);
+
+-- Create Not Null constraint for gate_state in section table
+ALTER TABLE section MODIFY (
+    gate_state VARCHAR(50)
+        CONSTRAINT nn_sec_gate_state NOT NULL
+);
+
+-- Create Not Null constraint for gate_pincode in section table
+ALTER TABLE section MODIFY (
+    gate_pincode VARCHAR(10)
+        CONSTRAINT nn_sec_gate_pincode NOT NULL
+);
+--Aditya
 
 -- Create table category
-create table category (
-category_id number(20),
-category_name varchar(30)
+CREATE TABLE category (
+    category_id   NUMBER(20),
+    category_name VARCHAR(30)
 );
 
 -- Create Primary Key constraint for category_id in category table
-ALTER TABLE category
-ADD CONSTRAINT PK_category_id Primary key (category_id);
+ALTER TABLE category ADD CONSTRAINT pk_cat_category_id PRIMARY KEY ( category_id );
 
 -- Create Not Null constraint for category_name in category table
-ALTER TABLE category
-MODIFY (category_name varchar(30) CONSTRAINT NN_category_name NOT NULL);
+ALTER TABLE category MODIFY (
+    category_name VARCHAR(30)
+        CONSTRAINT nn_cat_category_name NOT NULL
+);
+
+--Aditya
+-- Create Unique constraint for category_name in category table
+ALTER TABLE category MODIFY (
+    category_name VARCHAR(30)
+        CONSTRAINT un_cat_category_name UNIQUE
+);
+--Aditya
 
 -- Create table section_category
-create table section_category (
-sc_id number(20),
-section_id number(20),
-category_id number(20)
+CREATE TABLE section_category (
+    sc_id       NUMBER(20),
+    section_id  NUMBER(20),
+    category_id NUMBER(20)
 );
 
 -- Create Primary Key constraint for sc_id in section_category table
-ALTER TABLE section_category
-ADD CONSTRAINT PK_sc_id Primary key (sc_id);
+ALTER TABLE section_category ADD CONSTRAINT pk_sc_sc_id PRIMARY KEY ( sc_id );
 
 -- Create Foreign Key constraint for section_id in section_category table
 ALTER TABLE section_category
-ADD CONSTRAINT FK_section_id foreign key (section_id) references section (section_id);
+    ADD CONSTRAINT fk_sc_section_id FOREIGN KEY ( section_id )
+        REFERENCES section ( section_id );
 
 -- Create Foreign Key constraint for category_id in section_category table
 ALTER TABLE section_category
-ADD CONSTRAINT FK_category_id foreign key (category_id) references category (category_id);
+    ADD CONSTRAINT fk_sc_category_id FOREIGN KEY ( category_id )
+        REFERENCES category ( category_id );
+
+--TODO: section_id and category_id in section_category NOT NULL constraints - should we or not add them?
 
 -- Create table seat
-create table seat(
-seat_id number(20),
-sc_id number(20),
-seat_row number(3),
-seat_no number(3)
+CREATE TABLE seat (
+    seat_id  NUMBER(20),
+    sc_id    NUMBER(20),
+    seat_row NUMBER(3), 
+    seat_no  NUMBER(3)
 );
 
 -- Create Primary Key constraint for seat_id in seat table
-ALTER TABLE seat
-ADD CONSTRAINT PK_seat_id Primary key (seat_id);
+ALTER TABLE seat ADD CONSTRAINT pk_sea_seat_id PRIMARY KEY ( seat_id );
 
 -- Create Foreign Key constraint for sc_id in seat table
 ALTER TABLE seat
-ADD CONSTRAINT FK_SC_id foreign key (sc_id) references section_category (sc_id);
+    ADD CONSTRAINT fk_sea_sc_id FOREIGN KEY ( sc_id )
+        REFERENCES section_category ( sc_id );
 
 -- Create Not Null constraint for sc_id in seat table
-ALTER TABLE seat
-MODIFY (sc_id number(20) CONSTRAINT NN_sc_id NOT NULL);
+ALTER TABLE seat MODIFY (
+    sc_id NUMBER(20)
+        CONSTRAINT nn_sea_sc_id NOT NULL
+);
+
+--Aditya
+-- Create Not Null constraint for seat_row in seat table
+ALTER TABLE seat MODIFY (
+    seat_row NUMBER(3)
+        CONSTRAINT nn_sea_seat_row NOT NULL
+);
+
+-- Create Not Null constraint for seat_no in seat table
+ALTER TABLE seat MODIFY (
+    seat_no NUMBER(3)
+        CONSTRAINT nn_sea_seat_no NOT NULL
+);
+--Aditya
 
 -- Create table match
-create table match(
-match_id number(20),
-league_name varchar(30),
-team1 varchar(30),
-team2 varchar(30),
-m_start_time timestamp,
-m_end_time timestamp 
+CREATE TABLE match (
+    match_id     NUMBER(20),
+    league_name  VARCHAR(30),
+    team1        VARCHAR(30),
+    team2        VARCHAR(30),
+    m_start_time TIMESTAMP,
+    m_end_time   TIMESTAMP,
+    match_active VARCHAR(1) --Aditya
 );
 
 -- Create Primary Key constraint for match_id in match table
-ALTER TABLE match
-ADD CONSTRAINT PK_match_id Primary key (match_id);
+ALTER TABLE match ADD CONSTRAINT pk_mat_match_id PRIMARY KEY ( match_id );
+
+--Aditya
+-- Create Check constraint for match_active in match table
+ALTER TABLE match MODIFY (
+    match_active NUMBER(1)
+        CONSTRAINT chk_mat_match_active CHECK (match_active IN ('Y', 'N'))
+);
+--Aditya
 
 -- Create table price_catalog
-create table price_catalog(
-pc_id number(20),
-match_id number(20),
-sc_id number(20),
-amount number(5,2)
+CREATE TABLE price_catalog (
+    pc_id    NUMBER(20),
+    match_id NUMBER(20),
+    sc_id    NUMBER(20),
+    amount   NUMBER(5, 2)
 );
 
 -- Create Primary Key constraint for pc_id in price_catalog table
-ALTER TABLE price_catalog
-ADD CONSTRAINT PK_pc_id Primary key (pc_id);
+ALTER TABLE price_catalog ADD CONSTRAINT pk_pc_pc_id PRIMARY KEY ( pc_id );
 
 -- Create Foreign Key constraint for match_id in price_catalog table
 ALTER TABLE price_catalog
-ADD CONSTRAINT FK_match_id foreign key (match_id) references match (match_id);
+    ADD CONSTRAINT fk_pc_match_id FOREIGN KEY ( match_id )
+        REFERENCES match ( match_id );
 
 -- Create Foreign Key constraint for sc_id in price_catalog table
 ALTER TABLE price_catalog
-ADD CONSTRAINT FK_sc_id1 foreign key (sc_id) references section_category (sc_id);
+    ADD CONSTRAINT fk_pc_sc_id FOREIGN KEY ( sc_id )
+        REFERENCES section_category ( sc_id );
+        
+--Aditya
+-- Create Check constraint for amount in price_catalog table
+ALTER TABLE price_catalog MODIFY (
+    amount NUMBER(5,2)
+        CONSTRAINT chk_pc_amount CHECK (amount >=0 )
+);
+--Aditya
 
 -- Create table refund
-create table refund(
-rfd_id number(20),
-rfd_reason varchar(255),
-r_date_time timestamp
+CREATE TABLE refund (
+    rfd_id      NUMBER(20),
+    rfd_reason  VARCHAR(255),
+    r_date_time TIMESTAMP
 );
 
 -- Create Primary Key constraint for rfd_id in refund table
-ALTER TABLE refund
-ADD CONSTRAINT PK_rfd_id Primary key (rfd_id);
+ALTER TABLE refund ADD CONSTRAINT pk_rfd_id PRIMARY KEY ( rfd_id );
+
+--Aditya
+-- Create Not Null constraint for r_date_time in refund table
+ALTER TABLE refund MODIFY (
+    r_date_time TIMESTAMP
+        CONSTRAINT nn_ref_r_date_time NOT NULL
+);
+--Aditya
 
 -- Create table customer
-create table customer(
-cust_id number(20),
-cust_fname varchar(30),
-cust_lname varchar(30),
-cust_email varchar2(50),
-cust_contact varchar(10),
-cust_DOB date,
-cust_street varchar(100),
-cust_city varchar(50),
-cust_state varchar(50),
-cust_pincode number(10)
+CREATE TABLE customer (
+    cust_id      NUMBER(20),
+    cust_fname   VARCHAR(30),
+    cust_lname   VARCHAR(30),
+    cust_email   VARCHAR2(50),
+    cust_contact VARCHAR(10),
+    cust_dob     DATE,
+    cust_street  VARCHAR(100),
+    cust_city    VARCHAR(50),
+    cust_state   VARCHAR(50),
+    cust_pincode NUMBER(10)
 );
 
--- Create Primary Key constraint for rfd_id in refund table
-ALTER TABLE customer
-ADD CONSTRAINT PK_cust_id Primary key (cust_id);
+-- Create Primary Key constraint for cust_id in customer table
+ALTER TABLE customer ADD CONSTRAINT pk_cus_cust_id PRIMARY KEY ( cust_id );
+
+--Aditya
+-- Create Not Null constraint for cust_fname in customer table
+ALTER TABLE customer MODIFY (
+    cust_fname VARCHAR(30)
+        CONSTRAINT nn_cus_cust_fname NOT NULL
+);
+
+-- Create Not Null constraint for cust_lname in customer table
+ALTER TABLE customer MODIFY (
+    cust_lname VARCHAR(30)
+        CONSTRAINT nn_cus_cust_lname NOT NULL
+);
+
+-- Create Not Null constraint for cust_email in customer table
+ALTER TABLE customer MODIFY (
+    cust_email VARCHAR2(50)
+        CONSTRAINT nn_cus_cust_email NOT NULL
+);
+
+-- Create Unique constraint for cust_email in customer table
+ALTER TABLE customer MODIFY (
+    cust_email VARCHAR2(50)
+        CONSTRAINT un_cus_cust_email UNIQUE
+);
+--Aditya
 
 -- Create table discount
-create table discount(
-discount_id number(20),
-coupon_name varchar(30),
-discount_perc number(3),
-d_start_date timestamp,
-d_end_date timestamp
+CREATE TABLE discount (
+    discount_id   NUMBER(20),
+    coupon_name   VARCHAR(30),
+    discount_perc NUMBER(3),
+    d_start_date  TIMESTAMP,
+    d_end_date    TIMESTAMP
 );
 
 -- Create Primary Key constraint for rfd_id in refund table
-ALTER TABLE discount
-ADD CONSTRAINT PK_discount_id Primary key (discount_id);
+ALTER TABLE discount ADD CONSTRAINT pk_dis_discount_id PRIMARY KEY ( discount_id );
+
+--Aditya
+-- Create Not Null constraint for coupon_name in discount table
+ALTER TABLE discount MODIFY (
+    coupon_name VARCHAR(30)
+        CONSTRAINT nn_dis_coupon_name NOT NULL
+);
+
+-- Create Not Null constraint for discount_perc in discount table
+ALTER TABLE discount MODIFY (
+    discount_perc NUMBER(3)
+        CONSTRAINT nn_dis_discount_perc NOT NULL
+);
+
+-- Create Check constraint for discount_perc in discount table
+ALTER TABLE discount MODIFY (
+    discount_perc NUMBER(3)
+        CONSTRAINT chk_dis_discount_perc CHECK (discount_perc between 1 and 100)
+);
+
+-- Create Not Null constraint for d_start_date in discount table
+ALTER TABLE discount MODIFY (
+    d_start_date TIMESTAMP
+        CONSTRAINT nn_dis_d_start_date NOT NULL
+);
+
+-- Create Not Null constraint for d_end_date in discount table
+ALTER TABLE discount MODIFY (
+    d_end_date TIMESTAMP
+        CONSTRAINT nn_dis_d_end_date NOT NULL
+);
+
+
+--Aditya
 
 -- Create table payment
-create table payment(
-payment_id number(20),
-discount_id number(20),
-tot_amount number(10,2),
-p_date_time timestamp,
-payment_mode varchar(30)
+CREATE TABLE payment (
+    payment_id   NUMBER(20),
+    discount_id  NUMBER(20),
+    tot_amount   NUMBER(10, 2),
+    p_date_time  TIMESTAMP,
+    payment_mode VARCHAR(30)
 );
 
 -- Create Primary Key constraint for payment_id in payment table
-ALTER TABLE payment
-ADD CONSTRAINT PK_payment_id Primary key (payment_id);
+ALTER TABLE payment ADD CONSTRAINT pk_pay_payment_id PRIMARY KEY ( payment_id );
 
 -- Create Foreign Key constraint for discount_id in payment table
 ALTER TABLE payment
-ADD CONSTRAINT FK_discount_id foreign key (discount_id) references discount (discount_id);
+    ADD CONSTRAINT fk_discount_id FOREIGN KEY ( discount_id )
+        REFERENCES discount ( discount_id );
+        
+--Aditya
+-- Create Not Null constraint for tot_amount in payment table
+ALTER TABLE payment MODIFY (
+    tot_amount  NUMBER(10, 2)
+        CONSTRAINT nn_pay_tot_amount NOT NULL
+);
+
+-- Create Check constraint for tot_amount in payment table
+ALTER TABLE payment MODIFY (
+    tot_amount  NUMBER(10, 2)
+        CONSTRAINT chk_pay_tot_amount CHECK (tot_amount >=0 )
+);
+
+-- Create Not Null constraint for p_date_time in payment table
+ALTER TABLE payment MODIFY (
+    p_date_time TIMESTAMP
+        CONSTRAINT nn_pay_p_date_time NOT NULL
+);
+
+-- Create Not Null constraint for payment_mode in payment table
+ALTER TABLE payment MODIFY (
+    payment_mode VARCHAR(30)
+        CONSTRAINT nn_pay_payment_mode NOT NULL
+);
+
+
+--Aditya
 
 -- Create table ticket
-create table ticket(
-ticket_id number(20),
-cust_id number(20),
-seat_id number(20),
-rfd_id number(20),
-payment_id number(20),
-match_id number(20)
+CREATE TABLE ticket (
+    ticket_id  NUMBER(20),
+    cust_id    NUMBER(20),
+    seat_id    NUMBER(20),
+    rfd_id     NUMBER(20),
+    payment_id NUMBER(20),
+    match_id   NUMBER(20)
 );
 
 -- Create Primary Key constraint for ticket_id in ticket table
-ALTER TABLE ticket
-ADD CONSTRAINT PK_ticket_id Primary key (ticket_id);
+ALTER TABLE ticket ADD CONSTRAINT pk_tic_ticket_id PRIMARY KEY ( ticket_id );
 
 -- Create Foreign Key constraint for cust_id in ticket table
 ALTER TABLE ticket
-ADD CONSTRAINT FK_cust_id foreign key (cust_id) references customer (cust_id);
+    ADD CONSTRAINT fk_tic_cust_id FOREIGN KEY ( cust_id )
+        REFERENCES customer ( cust_id );
 
 -- Create Foreign Key constraint for seat_id in ticket table
 ALTER TABLE ticket
-ADD CONSTRAINT FK_seat_id foreign key (seat_id) references seat (seat_id);
+    ADD CONSTRAINT fk_tic_seat_id FOREIGN KEY ( seat_id )
+        REFERENCES seat ( seat_id );
 
 -- Create Foreign Key constraint for rfd_id in ticket table
 ALTER TABLE ticket
-ADD CONSTRAINT FK_rfd_id foreign key (rfd_id) references refund (rfd_id);
+    ADD CONSTRAINT fk_tic_rfd_id FOREIGN KEY ( rfd_id )
+        REFERENCES refund ( rfd_id );
 
 -- Create Foreign Key constraint for payment_id in ticket table
 ALTER TABLE ticket
-ADD CONSTRAINT FK_payment_id foreign key (payment_id) references payment (payment_id);
+    ADD CONSTRAINT fk_tic_payment_id FOREIGN KEY ( payment_id )
+        REFERENCES payment ( payment_id );
 
 -- Create Foreign Key constraint for match_id in ticket table
 ALTER TABLE ticket
-ADD CONSTRAINT FK_match_id1 foreign key (match_id) references match (match_id);
+    ADD CONSTRAINT fk_tic_match_id FOREIGN KEY ( match_id )
+        REFERENCES match ( match_id );
+
+--TODO: cust_id, seat_id,rfd_id,payment_id,match_id in ticket NOT NULL constraints - should we or not add them?
 
 -- Create table verification
-create table verification(
-ticket_id number(20),
-v_date_time timestamp
+CREATE TABLE verification (
+    ticket_id   NUMBER(20),
+    v_date_time TIMESTAMP
 );
 
 -- Create Foreign Key constraint for ticket_id in verification table
 ALTER TABLE verification
-ADD CONSTRAINT FK_ticket_id foreign key (ticket_id) references ticket (ticket_id);
+    ADD CONSTRAINT fk_ticket_id FOREIGN KEY ( ticket_id )
+        REFERENCES ticket ( ticket_id );
 
--- Create Not Null constraint for _date_time in verification table
-ALTER TABLE verification
-MODIFY (v_date_time timestamp CONSTRAINT NN_v_date_time NOT NULL);
+-- Create Not Null constraint for v_date_time in verification table
+ALTER TABLE verification MODIFY (
+    v_date_time TIMESTAMP
+        CONSTRAINT nn_v_date_time NOT NULL
+);
+
+--Aditya
+-- Create Unique constraint for ticket_id in verification table
+ALTER TABLE verification MODIFY (
+    ticket_id NUMBER(20)
+        CONSTRAINT un_ver_ticket_id UNIQUE
+);
+--Aditya
+
+--TODO: ticket_id in verification NOT NULL constraints - should we or not add them?
+
+BEGIN
+    dbms_output.put_line('---------------------------');
+    dbms_output.put_line('ALL THE SMS RELATED TABLES HAVE BEEN CREATED SUCCESSFULLY');
+    dbms_output.put_line('---------------------------');
+END;
+/
