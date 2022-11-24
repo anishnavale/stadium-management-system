@@ -340,7 +340,7 @@ ALTER TABLE match ADD CONSTRAINT pk_mat_match_id PRIMARY KEY ( match_id );
 --Aditya
 -- Create Check constraint for match_active in match table
 ALTER TABLE match MODIFY (
-    match_active NUMBER(1)
+    match_active VARCHAR(1)
         CONSTRAINT chk_mat_match_active CHECK (match_active IN ('Y', 'N'))
 );
 --Aditya
