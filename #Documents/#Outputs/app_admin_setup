@@ -1,0 +1,61 @@
+
+Procedure CREATE_SMS_APP_ADMIN_USER compiled
+
+Current User Running Script: ADMIN
+Inputs to the procedure create_sms_app_admin_user -> (app_admin,Sms@APPADM@123456789,100)
+Trying to create APP_ADMIN user on Oracle Autonomous Database...
+Checking if user already exists...
+Creating User: app_admin
+Granted Roles and Privileges: CONNECT(WITH ADMIN OPTION), RESOURCE, CREATE VIEW, CREATE USER, ALTER USER, DROP USER to app_admin
+
+
+PL/SQL procedure successfully completed.
+
+
+Procedure CREATE_SMS_APP_ADMIN_USER compiled
+
+Current User Running Script: ADMIN
+Inputs to the procedure create_sms_app_admin_user -> (app_admin,Sms@APPADM@123456789,100)
+Trying to create APP_ADMIN user on Oracle Autonomous Database...
+Checking if user already exists...
+User: app_admin already exists!
+Dropping and Recreating User: app_admin with new supplied password
+Creating User: app_admin
+Granted Roles and Privileges: CONNECT(WITH ADMIN OPTION), RESOURCE, CREATE VIEW, CREATE USER, ALTER USER, DROP USER to app_admin
+
+
+PL/SQL procedure successfully completed.
+
+
+Procedure CREATE_SMS_APP_ADMIN_USER compiled
+
+Current User Running Script: ADMIN
+Inputs to the procedure create_sms_app_admin_user -> (app_admin,Sms@APPADM@123456789,100)
+Trying to create APP_ADMIN user on Oracle Autonomous Database...
+Checking if user already exists...
+User: app_admin already exists!
+Dropping and Recreating User: app_admin with new supplied password
+Error Code: -1940
+Error Message: ORA-01940: cannot drop a user that is currently connected
+---------------------------
+Error Reason: TRYING TO CREATE APP_ADMIN USER THAT IS ALREADY CONNECTED TO DB, DISCONNECT IT AND RUN THE SCRIPT AGAIN
+---------------------------
+
+
+PL/SQL procedure successfully completed.
+
+
+Procedure CREATE_SMS_APP_ADMIN_USER compiled
+
+Current User Running Script: ADMIN
+Inputs to the procedure create_sms_app_admin_user -> (app_admin,Sms@APPADM@123456789,100)
+Trying to create APP_ADMIN user on Oracle Autonomous Database...
+Checking if user already exists...
+User: app_admin already exists!
+Dropping and Recreating User: app_admin with new supplied password
+Creating User: app_admin
+Granted Roles and Privileges: CONNECT(WITH ADMIN OPTION), RESOURCE, CREATE VIEW, CREATE USER, ALTER USER, DROP USER to app_admin
+
+
+PL/SQL procedure successfully completed.
+
