@@ -562,11 +562,11 @@ Values(160,16,'B',5);
 
 -- Match table
 INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
-VALUES (1,'T20','India','Pakistan', TO_DATE('2022-11-01 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2022-01-01 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
+VALUES (1,'T20','India','Pakistan', TO_DATE('2022-11-01 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2022-11-01 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
 INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
-VALUES (2,'T20','Australia','New Zealand', TO_DATE('2022-12-20 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2022-01-02 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
+VALUES (2,'T20','Australia','New Zealand', TO_DATE('2022-12-20 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2022-12-20 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
 INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
-VALUES (3,'IPL','Mumbai','Chennai', TO_DATE('2023-01-03 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2022-01-03 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
+VALUES (3,'IPL','Mumbai','Chennai', TO_DATE('2023-01-03 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2023-01-03 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
 
 -- Price_Catalog table
 INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
@@ -665,6 +665,8 @@ INSERT INTO payment (payment_id, discount_id, tot_amount, p_date_time, payment_m
 VALUES (4,NULL,100,TO_DATE('2022-11-24 11:30:00','yyyy-mm-dd hh24:mi:ss'),'Online');
 INSERT INTO payment (payment_id, discount_id, tot_amount, p_date_time, payment_mode)
 VALUES (5,1,9,TO_DATE('2022-11-20 11:30:00','yyyy-mm-dd hh24:mi:ss'),'Online');
+INSERT INTO payment (payment_id, discount_id, tot_amount, p_date_time, payment_mode)
+VALUES (6,1,9,TO_DATE('2022-11-24 11:30:00','yyyy-mm-dd hh24:mi:ss'),'Online');
 
 -- Refund Table
 INSERT INTO Refund (rfd_id, rfd_reason, r_date_time)
@@ -727,12 +729,14 @@ INSERT INTO ticket (ticket_id, cust_id, seat_id, rfd_id, payment_id, match_id)
 VALUES (27,1,10,NULL,4,2);
 INSERT INTO ticket (ticket_id, cust_id, seat_id, rfd_id, payment_id, match_id)
 VALUES (28,3,140,1,5,2);
+INSERT INTO ticket (ticket_id, cust_id, seat_id, rfd_id, payment_id, match_id)
+VALUES (29,2,140,NULL,6,2);
 
 -- Verification Table
 INSERT INTO Verification (ticket_id, v_date_time)
 VALUES (1, TO_DATE('2022-11-01 09:30:00','yyyy-mm-dd hh24:mi:ss'));
 INSERT INTO Verification (ticket_id, v_date_time)
-VALUES (2, TO_DATE('2022-11-11 09:31:00','yyyy-mm-dd hh24:mi:ss'));
+VALUES (2, TO_DATE('2022-11-01 09:31:00','yyyy-mm-dd hh24:mi:ss'));
 INSERT INTO Verification (ticket_id, v_date_time)
 VALUES (3, TO_DATE('2022-11-01 09:32:00','yyyy-mm-dd hh24:mi:ss'));
 INSERT INTO Verification (ticket_id, v_date_time)
@@ -761,3 +765,5 @@ INSERT INTO Verification (ticket_id, v_date_time)
 VALUES (15, TO_DATE('2022-11-01 09:44:00','yyyy-mm-dd hh24:mi:ss'));
 INSERT INTO Verification (ticket_id, v_date_time)
 VALUES (16, TO_DATE('2022-11-01 09:45:00','yyyy-mm-dd hh24:mi:ss'));
+
+commit;
