@@ -210,7 +210,6 @@ ALTER TABLE section MODIFY (
         CONSTRAINT nn_sec_section_name NOT NULL
 );
 
---Aditya
 -- Create Not Null constraint for gate_name in section table
 ALTER TABLE section MODIFY (
     gate_name VARCHAR(30)
@@ -240,7 +239,6 @@ ALTER TABLE section MODIFY (
     gate_pincode VARCHAR(10)
         CONSTRAINT nn_sec_gate_pincode NOT NULL
 );
---Aditya
 
 -- Create table category
 CREATE TABLE category (
@@ -257,13 +255,11 @@ ALTER TABLE category MODIFY (
         CONSTRAINT nn_cat_category_name NOT NULL
 );
 
---Aditya
 -- Create Unique constraint for category_name in category table
 ALTER TABLE category MODIFY (
     category_name VARCHAR(30)
         CONSTRAINT un_cat_category_name UNIQUE
 );
---Aditya
 
 -- Create table section_category
 CREATE TABLE section_category (
@@ -285,7 +281,6 @@ ALTER TABLE section_category
     ADD CONSTRAINT fk_sc_category_id FOREIGN KEY ( category_id )
         REFERENCES category ( category_id );
 
---TODO: section_id and category_id in section_category NOT NULL constraints - should we or not add them?
 
 -- Create table seat
 CREATE TABLE seat (
@@ -309,7 +304,6 @@ ALTER TABLE seat MODIFY (
         CONSTRAINT nn_sea_sc_id NOT NULL
 );
 
---Aditya
 -- Create Not Null constraint for seat_row in seat table
 ALTER TABLE seat MODIFY (
     seat_row VARCHAR(3)
@@ -321,7 +315,6 @@ ALTER TABLE seat MODIFY (
     seat_no NUMBER(3)
         CONSTRAINT nn_sea_seat_no NOT NULL
 );
---Aditya
 
 -- Create table match
 CREATE TABLE match (
@@ -331,19 +324,18 @@ CREATE TABLE match (
     team2        VARCHAR(30),
     m_start_time TIMESTAMP,
     m_end_time   TIMESTAMP,
-    match_active VARCHAR(1) --Aditya
+    match_active VARCHAR(1) 
 );
 
 -- Create Primary Key constraint for match_id in match table
 ALTER TABLE match ADD CONSTRAINT pk_mat_match_id PRIMARY KEY ( match_id );
 
---Aditya
+
 -- Create Check constraint for match_active in match table
 ALTER TABLE match MODIFY (
     match_active VARCHAR(1)
         CONSTRAINT chk_mat_match_active CHECK (match_active IN ('Y', 'N'))
 );
---Aditya
 
 -- Create table price_catalog
 CREATE TABLE price_catalog (
@@ -366,13 +358,12 @@ ALTER TABLE price_catalog
     ADD CONSTRAINT fk_pc_sc_id FOREIGN KEY ( sc_id )
         REFERENCES section_category ( sc_id );
         
---Aditya
+
 -- Create Check constraint for amount in price_catalog table
 ALTER TABLE price_catalog MODIFY (
     amount NUMBER(5,2)
         CONSTRAINT chk_pc_amount CHECK (amount >=0 )
 );
---Aditya
 
 -- Create table refund
 CREATE TABLE refund (
@@ -384,13 +375,11 @@ CREATE TABLE refund (
 -- Create Primary Key constraint for rfd_id in refund table
 ALTER TABLE refund ADD CONSTRAINT pk_rfd_id PRIMARY KEY ( rfd_id );
 
---Aditya
 -- Create Not Null constraint for r_date_time in refund table
 ALTER TABLE refund MODIFY (
     r_date_time TIMESTAMP
         CONSTRAINT nn_ref_r_date_time NOT NULL
 );
---Aditya
 
 -- Create table customer
 CREATE TABLE customer (
@@ -409,7 +398,6 @@ CREATE TABLE customer (
 -- Create Primary Key constraint for cust_id in customer table
 ALTER TABLE customer ADD CONSTRAINT pk_cus_cust_id PRIMARY KEY ( cust_id );
 
---Aditya
 -- Create Not Null constraint for cust_fname in customer table
 ALTER TABLE customer MODIFY (
     cust_fname VARCHAR(30)
@@ -433,7 +421,6 @@ ALTER TABLE customer MODIFY (
     cust_email VARCHAR2(50)
         CONSTRAINT un_cus_cust_email UNIQUE
 );
---Aditya
 
 -- Create table discount
 CREATE TABLE discount (
@@ -444,10 +431,9 @@ CREATE TABLE discount (
     d_end_date    TIMESTAMP
 );
 
--- Create Primary Key constraint for rfd_id in refund table
+-- Create Primary Key constraint for discount_id in discount table
 ALTER TABLE discount ADD CONSTRAINT pk_dis_discount_id PRIMARY KEY ( discount_id );
 
---Aditya
 -- Create Not Null constraint for coupon_name in discount table
 ALTER TABLE discount MODIFY (
     coupon_name VARCHAR(30)
@@ -478,9 +464,6 @@ ALTER TABLE discount MODIFY (
         CONSTRAINT nn_dis_d_end_date NOT NULL
 );
 
-
---Aditya
-
 -- Create table payment
 CREATE TABLE payment (
     payment_id   NUMBER(20),
@@ -498,7 +481,6 @@ ALTER TABLE payment
     ADD CONSTRAINT fk_discount_id FOREIGN KEY ( discount_id )
         REFERENCES discount ( discount_id );
         
---Aditya
 -- Create Not Null constraint for tot_amount in payment table
 ALTER TABLE payment MODIFY (
     tot_amount  NUMBER(10, 2)
@@ -523,8 +505,6 @@ ALTER TABLE payment MODIFY (
         CONSTRAINT nn_pay_payment_mode NOT NULL
 );
 
-
---Aditya
 
 -- Create table ticket
 CREATE TABLE ticket (
@@ -564,7 +544,6 @@ ALTER TABLE ticket
     ADD CONSTRAINT fk_tic_match_id FOREIGN KEY ( match_id )
         REFERENCES match ( match_id );
 
---TODO: cust_id, seat_id,rfd_id,payment_id,match_id in ticket NOT NULL constraints - should we or not add them?
 
 -- Create table verification
 CREATE TABLE verification (
@@ -583,15 +562,12 @@ ALTER TABLE verification MODIFY (
         CONSTRAINT nn_v_date_time NOT NULL
 );
 
---Aditya
 -- Create Unique constraint for ticket_id in verification table
 ALTER TABLE verification MODIFY (
     ticket_id NUMBER(20)
         CONSTRAINT un_ver_ticket_id UNIQUE
 );
---Aditya
 
---TODO: ticket_id in verification NOT NULL constraints - should we or not add them?
 
 BEGIN
     dbms_output.put_line('---------------------------');
