@@ -61,6 +61,7 @@ select
     p.payment_mode,
     p.discount_coupon_used,
     p.discount_perc_applied,
+    t.rfd_id,
     'Y' as BookingStatus
 from 
     ticket t
@@ -70,7 +71,7 @@ from
         inner join match m on t.match_id=m.match_id
 order by m.match_id, t.ticket_id;
 
---select * from V_TICKET_HISTORY;
+select * from V_TICKET_HISTORY;
 
 create or replace view V_SHOW_SEAT_STATUS
 as
@@ -88,18 +89,20 @@ select * from (
         end BOOKING_STATUS
         from match_seats m 
             left outer join V_TICKET_HISTORY t on m.seat_id=t.seat_id and m.match_id=t.match_id
+        where rfd_id is null
     order by m.match_id, m.seat_id
 );
 
 
 -- 3. V_Show_Upcoming_Matches - For CUSTOMERS to see upcoming matches
-create or replace view V_Show_Upcoming_Matches as
+create or replace view V_SHOW_UPCOMING_MATCHES as
 select LEAGUE_NAME, TEAM1, TEAM2, M_START_TIME from match 
 where M_START_TIME > SYSTIMESTAMP;
 
 -- 4. V_User_Tickets - For CUSTOMERS to review past ticket bookings details
-create or replace view V_User_Tickets as
-select c.cust_fname ||' '|| c.cust_lname as cust_name, m.league_name, m.team1, m.team2, m.m_start_time, se.gate_name, se.section_name, ca.category_name, s.seat_row, s.seat_no from ticket t
+create or replace view V_USER_TICKETS as
+select c.cust_fname ||' '|| c.cust_lname as cust_name, m.league_name, m.team1, m.team2, m.m_start_time, se.gate_name, se.section_name, ca.category_name, s.seat_row, s.seat_no, t.rfd_id
+from ticket t
 inner join customer c on c.cust_id=t.cust_id
 inner join match m on m.match_id=t.match_id
 inner join seat s on t.seat_id=s.seat_id
@@ -109,13 +112,13 @@ inner join category ca on ca.category_id=sc.category_id
 order by ticket_id;
 
 -- 5. V_Available_Seats - For CUSTOMERS to review available seat
-create or replace view V_Available_Seats as
+create or replace view V_AVAILABLE_SEATS as
 select league_name, team1, team2, match_date, section_name, category_name, seat_row, seat_no from V_SHOW_SEAT_STATUS
 where booking_status = 'N';
 
  
 --6. V_Tickets_With_Discounts - To understand how a discount scheme affected ticket bookings
-create or replace view V_Tickets_With_Discounts as
+create or replace view V_TICKETS_WITH_DISCOUNTS as
 select c.cust_fname ||' '|| c.cust_lname as cust_name, m.league_name, m.team1, m.team2, m.m_start_time, se.section_name, ca.category_name, s.seat_row, s.seat_no, p.tot_amount, d.coupon_name, d.discount_perc from ticket t
 join payment p on t.payment_id = p.payment_id
 join discount d on p.discount_id = d.discount_id
@@ -127,7 +130,7 @@ inner join customer c on c.cust_id=t.cust_id
 inner join match m on m.match_id=t.match_id;
  
 --7. V_Show_Refunded_Tickets - To understand user wise refund detail
-create or replace view V_Show_Refunded_Tickets as
+create or replace view V_SHOW_REFUNDED_TICKETS as
 select c.cust_fname ||' '|| c.cust_lname as cust_name, m.league_name, m.team1, m.team2, m.m_start_time, se.gate_name, se.section_name, ca.category_name, s.seat_row, s.seat_no from ticket t
 join refund r on r.rfd_id = t.rfd_id
 inner join customer c on c.cust_id=t.cust_id
@@ -138,7 +141,7 @@ inner join section se on se.section_id=sc.section_id
 inner join category ca on ca.category_id=sc.category_id;
 
 -- 8. V_Match_Wise_Attendance - To understand how many people attended match
-create or replace view V_Match_Wise_Attendance as
+create or replace view V_MATCH_WISE_ATTENDANCE as
 select m.league_name, m.team1, m.team2, c.cust_fname ||' '|| c.cust_lname as cust_name, se.gate_name, se.section_name, ca.category_name, s.seat_row, s.seat_no from match m
 inner join ticket t on t.match_id=m.match_id
 inner join verification v on v.ticket_id=t.ticket_id
