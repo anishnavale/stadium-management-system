@@ -106,7 +106,7 @@ inner join seat s on t.seat_id=s.seat_id
 inner join section_category sc on sc.sc_id=s.sc_id
 inner join section se on se.section_id=sc.section_id
 inner join category ca on ca.category_id=sc.category_id
-where m.m_start_time < SYSTIMESTAMP;
+order by ticket_id;
 
 -- 5. V_Available_Seats - For CUSTOMERS to review available seat
 create or replace view V_Available_Seats as
@@ -149,36 +149,44 @@ inner join section se on se.section_id=sc.section_id
 inner join category ca on ca.category_id=sc.category_id;
  
 --9. V_Yearly_Monthly_Sales - To understand year and month wise sales
-create or replace view V_Yearly_Monthly_Sales as
-select to_char(p.p_date_time, 'YYYY') Year, to_char(p.p_date_time, 'Mon') Month, sum(p.tot_amount) tot_sales, count(ticket_id) as cnt_ticket  from ticket t
-join payment p on t.payment_id = p.payment_id
-group by to_char(p.p_date_time, 'YYYY'), to_char(p.p_date_time, 'Mon');
+create or replace view V_YEARLY_MONTHLY_SALES
+as
+select * from (
+select to_char(p.p_date_time, 'MON-YYYY'),sum(p.tot_amount) from payment p group by to_char(p.p_date_time, 'MON-YYYY')
+);
  
 ---10. V_League_Team_Sales - To understand league and team wise sale
-create or replace view V_League_Team_Sales as
-select m.league_name, m.team1, m.team2, sum(p.tot_amount) tot_sales, count(1) as cnt_ticket from match m
-join ticket t on t.match_id = m.match_id
-join payment p on t.payment_id = p.payment_id
-group by m.league_name, m.team1, m.team2;
-
+create or replace view V_LEAGUE_TEAM_SALES
+as
+select * from (
+with a as
+(
+    select distinct match_id, payment_id 
+    from ticket
+) 
+select m.league_name, m.team1, m.team2, sum(p.tot_amount) from a
+inner join match m on a.match_id=m.match_id
+inner join payment p on a.payment_id=p.payment_id
+group by m.league_name, m.team1, m.team2
+);
 
 -- Reports
 select * from V_SHOW_SEATING_STRUCTURE;
 
 select * from V_SHOW_SEAT_STATUS;
 
-select * from V_Show_Upcoming_Matches;
+select * from V_SHOW_UPCOMING_MATCHES;
 
-select * from V_User_Tickets;
+select * from V_USER_TICKETS;
 
-select * from V_Available_Seats;
+select * from V_AVAILABLE_SEATS;
 
-select * from V_Tickets_With_Discounts;
+select * from V_TICKETS_WITH_DISCOUNTS;
 
-select * from V_Show_Refunded_Tickets;
+select * from V_SHOW_REFUNDED_TICKETS;
 
-select * from V_Match_Wise_Attendance;
+select * from V_MATCH_WISE_ATTENDANCE;
 
-select * from V_Yearly_Monthly_Sales;
+select * from V_YEARLY_MONTHLY_SALES;
 
-select * from V_League_Team_Sales;
+select * from V_LEAGUE_TEAM_SALES;
