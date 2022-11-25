@@ -173,6 +173,27 @@ inner join payment p on a.payment_id=p.payment_id
 group by m.league_name, m.team1, m.team2
 );
 
+--Granting access to views to specific users
+grant select on V_SHOW_SEATING_STRUCTURE to STADIUM_MANAGER;
+
+grant select on V_SHOW_SEAT_STATUS to STADIUM_MANAGER;
+
+grant select on V_SHOW_UPCOMING_MATCHES to STADIUM_MANAGER, CUSTOMER;
+
+grant select on V_USER_TICKETS to STADIUM_MANAGER, CUSTOMER;
+
+grant select on V_AVAILABLE_SEATS to STADIUM_MANAGER, CUSTOMER;
+
+grant select on V_TICKETS_WITH_DISCOUNTS to FINANCE_MANAGER;
+
+grant select on V_SHOW_REFUNDED_TICKETS to FINANCE_MANAGER;
+
+grant select on V_MATCH_WISE_ATTENDANCE to STADIUM_MANAGER, STADIUM_SECURITY;
+
+grant select on V_YEARLY_MONTHLY_SALES to FINANCE_MANAGER;
+
+grant select on V_LEAGUE_TEAM_SALES to FINANCE_MANAGER;
+
 -- Reports
 select * from V_SHOW_SEATING_STRUCTURE;
 
