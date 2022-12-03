@@ -1,9 +1,6 @@
 --Author: Aditya, Anish, Sweta, Sejal
---Comments: Script to generate reports from SMS tables
+--Comments: Match Management Module
 --          Note: Run this script logged in as 'APP_ADMIN' user for Oracle Autonomous Database
-
-select * from match;
-select * from ticket;
 
 PURGE RECYCLEBIN;
 
@@ -166,6 +163,7 @@ BEGIN
 END;
 /
 
+/*
 CREATE OR REPLACE PROCEDURE PROC_INACTIVATE_MATCH(
     in_match_id NUMBER,
     in_reason VARCHAR
@@ -185,5 +183,5 @@ BEGIN
     commit;
 END;
 /
-
+*/
 
