@@ -71,6 +71,32 @@ begin
     dbms_output.put_line('Creating the '||'Sequence : ' || seqName);
     execute immediate 'CREATE SEQUENCE ' || seqName || ' INCREMENT BY 1 START WITH 1';
     
+    seqName:='SEQ_CAT_CATEGORY_ID';
+    select count(1) into seqCount from all_sequences where sequence_name=seqName;
+    
+    if seqCount>0
+    then
+        dbms_output.put_line('Sequence : ' || seqName || ' already exists, dropping and recreating it!' );
+        EXECUTE IMMEDIATE 'DROP SEQUENCE ' || seqName;
+    end if;
+    
+
+    dbms_output.put_line('Creating the '||'Sequence : ' || seqName);
+    execute immediate 'CREATE SEQUENCE ' || seqName || ' INCREMENT BY 1 START WITH 1';
+    
+    seqName:='SEQ_SC_SC_ID';
+    select count(1) into seqCount from all_sequences where sequence_name=seqName;
+    
+    if seqCount>0
+    then
+        dbms_output.put_line('Sequence : ' || seqName || ' already exists, dropping and recreating it!' );
+        EXECUTE IMMEDIATE 'DROP SEQUENCE ' || seqName;
+    end if;
+    
+
+    dbms_output.put_line('Creating the '||'Sequence : ' || seqName);
+    execute immediate 'CREATE SEQUENCE ' || seqName || ' INCREMENT BY 1 START WITH 1';
+    
 
 exception
 when others
@@ -132,7 +158,7 @@ begin
         else
             insert into section values(SEQ_SEC_SECTION_ID.nextval,SectionName, GateName, GateStreet, GateCity, GateState, GatePincode);
             commit;
-            dbms_output.put_line('New Section Created'); 
+        dbms_output.put_line('New Section Added: ' || SectionName); 
         end if;
     
     end if;
@@ -143,6 +169,7 @@ exception
 
     when exp_NULL_VALUE
     then
+        dbms_output.new_line;
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('CALLED PROC WITH NULL VALUES, PLEASE SEND NON-NULL VALUES'); 
         dbms_output.put_line('---------------------------');
@@ -156,6 +183,7 @@ exception
 
     when exp_SECTION_EXISTS
     then
+        dbms_output.new_line;
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('SECTION ALREADY EXISTS, ASSIGN A NAME THAT IS NOT USED ALREADY'); 
         dbms_output.put_line('---------------------------');
@@ -164,6 +192,7 @@ exception
         
     when exp_GATE_EXISTS
     then
+        dbms_output.new_line;
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('GATE ALREADY EXISTS, ASSIGN A NAME THAT IS NOT USED ALREADY'); 
         dbms_output.put_line('---------------------------');
@@ -228,7 +257,7 @@ begin
             gate_pincode=GatePincode
             where section_id=SectionID;
             commit;
-            dbms_output.put_line('Section Updated'); 
+            dbms_output.put_line('SectionID Updated: ' || SectionID); 
         end if;        
     else
         raise exp_SECTION_NOT_EXISTS;
@@ -239,6 +268,7 @@ exception
 
     when exp_NULL_VALUE
     then
+        dbms_output.new_line;
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('CALLED PROC WITH NULL VALUES, PLEASE SEND NON-NULL VALUES'); 
         dbms_output.put_line('---------------------------');
@@ -252,6 +282,7 @@ exception
 
     when exp_SECTION_NOT_EXISTS
     then
+        dbms_output.new_line;
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('SECTION DOES NOT EXISTS, GIVE THE CORRECT SECTION ID THAT EXISTS'); 
         dbms_output.put_line('---------------------------');
@@ -260,6 +291,7 @@ exception
     
     when exp_GATE_EXISTS
     then
+        dbms_output.new_line;
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('GATE ALREADY EXISTS FOR ANOTHER SECTION, ASSIGN A NAME THAT IS NOT USED ALREADY'); 
         dbms_output.put_line('---------------------------');
@@ -274,5 +306,164 @@ exception
         dbms_output.put_line('Error Code: ' || e_code);
         dbms_output.put_line('Error Message: ' || SUBSTR(e_msg, 1, 255)); 
     
+end;
+/
+
+
+--proc : PROC_ADD_NEW_CATEGORY(CategoryName)
+create or replace procedure
+PROC_ADD_NEW_CATEGORY(
+    CategoryName VARCHAR
+) is
+    categoryCount NUMBER;
+    e_code NUMBER;
+    e_msg VARCHAR(255);
+    exp_CATEGORY_EXISTS exception;
+    exp_NULL_VALUE exception;
+begin
+
+    if CategoryName IS NULL
+    then
+        raise exp_NULL_VALUE;
+    end if;
+    
+    select count(1) into categoryCount from category where category_name=CategoryName;
+    if categoryCount>0
+    then
+        raise exp_CATEGORY_EXISTS;
+    else
+        insert into category values(SEQ_CAT_CATEGORY_ID.nextval, CategoryName);
+        commit;
+        dbms_output.put_line('New Category Added: ' || categoryName); 
+    end if;
+
+exception
+
+    when exp_NULL_VALUE
+        then
+            dbms_output.new_line;
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('CALLED PROC WITH NULL VALUES, PLEASE SEND NON-NULL VALUES'); 
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('CategoryName: ' || CategoryName);
+            dbms_output.put_line('---------------------------');
+        
+    when exp_CATEGORY_EXISTS
+    then
+        dbms_output.new_line;
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('CATEGORY ALREADY EXISTS, ASSIGN A NAME THAT IS NOT USED ALREADY'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('CategoryName: ' || CategoryName);
+        dbms_output.put_line('---------------------------');
+    when others
+    then 
+        dbms_output.put_line('Exception Occurred');
+        e_code := SQLCODE;
+        e_msg := SQLERRM;
+        dbms_output.put_line('Error Code: ' || e_code);
+        dbms_output.put_line('Error Message: ' || SUBSTR(e_msg, 1, 255)); 
+end;
+/
+
+--proc : PROC_ADD_NEW_SECTION_CATEGORY(SectionID, CategoryID)
+create or replace procedure
+PROC_ADD_NEW_SECTION_CATEGORY(
+    SectionID NUMBER,
+    CategoryID NUMBER
+) is
+    sectionCount NUMBER;
+    categoryCount NUMBER;
+    sectionCategoryCount NUMBER;
+    e_code NUMBER;
+    e_msg VARCHAR(255);
+    exp_SECTION_CATEGORY_EXISTS exception;
+    exp_SECTION_NOT_EXISTS exception;
+    exp_CATEGORY_NOT_EXISTS exception;
+    exp_NULL_VALUE exception;
+begin
+
+    if SectionID IS NULL
+    or CategoryID IS NULL
+    then
+        raise exp_NULL_VALUE;
+    end if;
+    
+    select count(1) into sectionCount from section
+    where section_id=SectionID;
+    
+    select count(1) into categoryCount from category
+    where category_id=CategoryID;
+    
+    select count(1) into sectionCategoryCount from section_category 
+    where section_id=SectionID and category_id=CategoryID;
+    
+    if sectionCount<=0
+        then
+            raise exp_SECTION_NOT_EXISTS;
+    end if;
+    
+    if categoryCount<=0
+        then
+            raise exp_CATEGORY_NOT_EXISTS;
+    end if;
+    
+    
+    if sectionCategoryCount>0
+    then
+        raise exp_SECTION_CATEGORY_EXISTS;
+    else
+        insert into section_category values(SEQ_SC_SC_ID.nextval, SectionID, CategoryID);
+        commit;
+        dbms_output.put_line('New Section Category Added: ' || '('||SectionID||')' || '('||CategoryID||')'); 
+    end if;
+
+exception
+
+    when exp_NULL_VALUE
+        then
+            dbms_output.new_line;
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('CALLED PROC WITH NULL VALUES, PLEASE SEND NON-NULL VALUES'); 
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('SectionID: ' || SectionID);
+            dbms_output.put_line('CategoryID: ' || CategoryID);
+            dbms_output.put_line('---------------------------');
+        
+    when exp_SECTION_NOT_EXISTS
+    then
+        dbms_output.new_line;
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SECTION DOES NOT EXIST, USE ONE THAT EXISTS ALREADY, OR CREATE A NEW ONE'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SectionID: ' || SectionID);
+        dbms_output.put_line('---------------------------');
+
+    when exp_CATEGORY_NOT_EXISTS
+    then
+        dbms_output.new_line;
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('CATEGORY DOES NOT EXIST, USE ONE THAT EXISTS ALREADY, OR CREATE A NEW ONE'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('CategoryID: ' || CategoryID);
+        dbms_output.put_line('---------------------------');
+        
+    when exp_SECTION_CATEGORY_EXISTS
+    then
+        dbms_output.new_line;
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SECTION CATEGORY ALREADY EXISTS, YOU CAN CREATE A SECTION CATEGORY ONLY ONCE'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SectionID: ' || SectionID);
+        dbms_output.put_line('CategoryID: ' || CategoryID);
+        dbms_output.put_line('---------------------------');
+        
+    when others
+    then 
+        dbms_output.put_line('Exception Occurred');
+        e_code := SQLCODE;
+        e_msg := SQLERRM;
+        dbms_output.put_line('Error Code: ' || e_code);
+        dbms_output.put_line('Error Message: ' || SUBSTR(e_msg, 1, 255)); 
 end;
 /
