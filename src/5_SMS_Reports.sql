@@ -37,7 +37,6 @@ FROM
     payment p
     LEFT OUTER JOIN discount d ON p.discount_id = d.discount_id;
     
---select * from V_PAYMENT_INFORMATION;
 
 create or replace view V_TICKET_HISTORY
 as
@@ -71,7 +70,6 @@ from
         inner join match m on t.match_id=m.match_id
 order by m.match_id, t.ticket_id;
 
-select * from V_TICKET_HISTORY;
 
 create or replace view V_SHOW_SEAT_STATUS
 as
