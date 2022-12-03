@@ -70,7 +70,18 @@ CREATE OR REPLACE PROCEDURE PROC_ADD_NEW_MATCH(
 )
 IS
   is_true NUMBER;
+  exp_NULL_VALUE exception;
 BEGIN
+    
+    if in_league_name is NULL
+    or in_team1 is NULL
+    or in_team2 is NULL
+    or in_start_time is NULL
+    or in_end_time is NULL
+    or in_match_active is NULL
+    then raise exp_NULL_VALUE;
+    end if;
+    
   SELECT count(*)
   INTO is_true
   FROM match
@@ -81,9 +92,23 @@ BEGIN
         dbms_output.put_line('Time Conflict');
     ELSE
     INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
-    VALUES (match_table_seq.nextval,in_league_name,in_team1,in_team2,in_start_time,in_end_time,in_match_active);
+    VALUES (SEQ_MAT.nextval,in_league_name,in_team1,in_team2,in_start_time,in_end_time,in_match_active);
     commit;
     END IF;
+    
+    exception
+        when exp_NULL_VALUE
+    then
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('CALLED PROC WITH NULL VALUES, PLEASE SEND NON-NULL VALUES'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('League_Name: ' || in_league_name);
+        dbms_output.put_line('Team1: ' || in_team1);
+        dbms_output.put_line('Team2: ' || in_team2);
+        dbms_output.put_line('M_Start_Time: ' || in_start_time);
+        dbms_output.put_line('M_End_Time: ' || in_end_time);
+        dbms_output.put_line('MatchActive: ' || in_match_active);
+        dbms_output.put_line('---------------------------');
 END;
 /
 
@@ -98,7 +123,17 @@ CREATE OR REPLACE PROCEDURE PROC_MODIFY_MATCH(
 )
 IS
   is_true NUMBER;
+  exp_NULL_VALUE exception;
 BEGIN
+    if in_league_name is NULL
+    or in_team1 is NULL
+    or in_team2 is NULL
+    or in_start_time is NULL
+    or in_end_time is NULL
+    or in_match_active is NULL
+    then raise exp_NULL_VALUE;
+    end if;
+    
   SELECT count(*)
   INTO is_true
   FROM match
@@ -114,6 +149,20 @@ BEGIN
     WHERE match_id = in_match_id;
     commit;
     END IF;
+    
+    exception
+        when exp_NULL_VALUE
+    then
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('CALLED PROC WITH NULL VALUES, PLEASE SEND NON-NULL VALUES'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('League_Name: ' || in_league_name);
+        dbms_output.put_line('Team1: ' || in_team1);
+        dbms_output.put_line('Team2: ' || in_team2);
+        dbms_output.put_line('M_Start_Time: ' || in_start_time);
+        dbms_output.put_line('M_End_Time: ' || in_end_time);
+        dbms_output.put_line('MatchActive: ' || in_match_active);
+        dbms_output.put_line('---------------------------');
 END;
 /
 
