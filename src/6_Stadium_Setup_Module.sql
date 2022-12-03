@@ -97,6 +97,19 @@ begin
     dbms_output.put_line('Creating the '||'Sequence : ' || seqName);
     execute immediate 'CREATE SEQUENCE ' || seqName || ' INCREMENT BY 1 START WITH 1';
     
+    seqName:='SEQ_SEA_SEAT_ID';
+    select count(1) into seqCount from all_sequences where sequence_name=seqName;
+    
+    if seqCount>0
+    then
+        dbms_output.put_line('Sequence : ' || seqName || ' already exists, dropping and recreating it!' );
+        EXECUTE IMMEDIATE 'DROP SEQUENCE ' || seqName;
+    end if;
+    
+
+    dbms_output.put_line('Creating the '||'Sequence : ' || seqName);
+    execute immediate 'CREATE SEQUENCE ' || seqName || ' INCREMENT BY 1 START WITH 1';
+    
 
 exception
 when others
@@ -456,6 +469,83 @@ exception
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('SectionID: ' || SectionID);
         dbms_output.put_line('CategoryID: ' || CategoryID);
+        dbms_output.put_line('---------------------------');
+        
+    when others
+    then 
+        dbms_output.put_line('Exception Occurred');
+        e_code := SQLCODE;
+        e_msg := SQLERRM;
+        dbms_output.put_line('Error Code: ' || e_code);
+        dbms_output.put_line('Error Message: ' || SUBSTR(e_msg, 1, 255)); 
+end;
+/
+
+--proc : PROC_ADD_NEW_SEATS(SectionCategoryID, SeatRow, NumberOfSeatsInRow)
+create or replace procedure
+PROC_ADD_NEW_CATEGORY(
+    SectionCategoryID NUMBER,
+    SeatRow VARCHAR,
+    NumberOfSeatsInRow NUMBER
+) is
+    sectionCategoryCount NUMBER;
+    seatRowCount NUMBER;
+    e_code NUMBER;
+    e_msg VARCHAR(255);
+    exp_SECTION_CATEGORY_NOT_EXISTS exception;
+    exp_SEAT_ROW_ALREADY_EXISTS exception;
+    exp_NULL_VALUE exception;
+begin
+
+    if SectionCategoryID IS NULL
+    or SeatRow IS NULL
+    or NumberOfSeatsInRow IS NULL
+    then
+        raise exp_NULL_VALUE;
+    end if;
+    
+    select count(1) into sectionCategoryCount from section_category where sc_id=SectionCategoryID;
+    if sectionCategoryCount<=0
+    then
+        raise exp_SECTION_CATEGORY_NOT_EXISTS;
+    end if;
+    
+    select count(1) into seatRowCount from seat where seat_row=SeatRow and sc_id=SectionCategoryID;
+    if seatRowCount>0
+    then
+        raise exp_SEAT_ROW_ALREADY_EXISTS;
+    end if;
+
+exception
+
+    when exp_NULL_VALUE
+        then
+            dbms_output.new_line;
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('CALLED PROC WITH NULL VALUES, PLEASE SEND NON-NULL VALUES'); 
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('SectionCategoryID: ' || SectionCategoryID);
+            dbms_output.put_line('SeatRow: ' || SeatRow);
+            dbms_output.put_line('NumberOfSeatsInRow: ' || NumberOfSeatsInRow);
+            dbms_output.put_line('---------------------------');
+        
+    when exp_SECTION_CATEGORY_NOT_EXISTS
+    then
+        dbms_output.new_line;
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SECTION CATEGORY DOES NOT EXISTS, CREATE SEATS FOR SECTION CATEGORY THAT EXISTS, OR FIRST CREATE A NEW ONE'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SectionCategoryID: ' || SectionCategoryID);
+        dbms_output.put_line('---------------------------');
+         
+    when exp_SEAT_ROW_ALREADY_EXISTS
+    then
+        dbms_output.new_line;
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SEAT ROW ALREADY EXISTS FOR SECTION CATEGORY, CREATE SEATS FOR SEAT ROW THAT DOES NOT EXIST'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('SectionCategoryID: ' || SectionCategoryID);
+        dbms_output.put_line('SeatRowID: ' || SeatRow);
         dbms_output.put_line('---------------------------');
         
     when others
