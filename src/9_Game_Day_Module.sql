@@ -22,8 +22,10 @@ BEGIN
     
   SELECT count(*)
   INTO is_true
-  FROM ticket
-  WHERE rfd_id is NULL and ticket_id = in_ticket_id;
+  FROM ticket t
+  inner join match m on t.match_id = m.match_id
+  WHERE rfd_id is NULL and ticket_id = in_ticket_id
+  and extract(hour from (m.m_start_time - systimestamp)) between -1 and 3;
 
   IF is_true != 1 THEN
         dbms_output.put_line('Invalid Ticket');
@@ -44,4 +46,5 @@ BEGIN
         dbms_output.put_line('---------------------------');
 END;
 /
+
 
