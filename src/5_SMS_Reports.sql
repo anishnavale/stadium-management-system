@@ -1,13 +1,19 @@
---Author: Aditya, Anish, Sweta, Sejal
---Comments: Script to generate reports from SMS tables
---          Note: Run this script logged in as 'APP_ADMIN' user for Oracle Autonomous Database
+set serveroutput on;
+purge recyclebin;
 
-PURGE RECYCLEBIN;
+--Show section wise categories as configured by the STADIUM_MANAGER
+create or replace view
+V_SECTION_WISE_CATEGORY
+as
+select c.sc_id, a.section_name, b.category_name
+from section_category c
+inner join section a on c.section_id = a.section_id
+inner join category b on c.category_id = b.category_id
+order by c.sc_id;
 
-SET SERVEROUTPUT ON;
-
--- 1. V_Show_Seating_Structure - STADIUM_MANAGER wants to get an idea about the stadium
-create or replace view V_SHOW_SEATING_STRUCTURE
+--Show complete stadium seating arrangement as configured by the STADIUM_MANAGER
+create or replace view
+V_STADIUM_SEATING_STRUCTURE
 as
 with sc as (
 
@@ -21,11 +27,64 @@ with sc as (
 from seat a inner join sc b on a.sc_id = b.sc_id
 order by a.seat_id;
 
+--Show active matches only as configured by the STADIUM_MANAGER
+create or replace view
+V_MATCH_TIMETABLE
+as
+select 
+    match_id as match_id,
+    league_name,
+    team1,
+    team2,
+    m_start_time,
+    m_end_time
+from
+    match
+where
+    match_active='Y';
 
--- 2. V_Show_Seats_Status - STADIUM_MANAGER wants to see the seat booking status over matches
+--Show price catalog for matches as configured by the FINANCE_MANAGER 
+create or replace view
+V_PRICE_CATALOG
+as
+with sc as (
 
---Payment Information View
-create or replace view V_PAYMENT_INFORMATION as
+    select c.sc_id, a.section_name, b.category_name
+    from section_category c
+    inner join section a on c.section_id = a.section_id
+    inner join category b on c.category_id = b.category_id
+    order by c.sc_id
+
+) 
+select 
+     a.pc_id as price_catalog_id, 
+     b.match_id as match_id, 
+     b.team1 as team1,
+     b.team2 as team2,
+     c.section_name as section_name,
+     c.category_name as category_name,
+     a.amount as ticket_cost
+from price_catalog a
+inner join match b on a.match_id=b.match_id
+inner join sc c on a.sc_id=c.sc_id
+order by a.pc_id;
+
+--Show discounts as configured by the FINANCE_MANAGER 
+create or replace view
+V_DISCOUNTS
+as
+select
+    d.coupon_name as COUPON_CODE,
+    d.discount_perc as DISCOUNT,
+    to_char(d.d_start_date, 'DD-MON-YYYY HH:MI:SS AM') AS VALID_FROM,
+    to_char(d.d_end_date, 'DD-MON-YYYY HH:MI:SS AM') AS VALID_TILL
+from
+    discount d;
+    
+--Show payment information captured while booking tickets (includes information about discounts, and considers payments that were later refunded too)
+create or replace view 
+V_PAYMENT_INFORMATION
+as
 SELECT
     p.payment_id as PAYMENT_ID,
     p.tot_amount as TOT_AMOUNT_PAID,
@@ -36,14 +95,14 @@ SELECT
 FROM
     payment p
     LEFT OUTER JOIN discount d ON p.discount_id = d.discount_id;
-    
---select * from V_PAYMENT_INFORMATION;
 
-create or replace view V_TICKET_HISTORY
+--Show complete ticket information
+create or replace view 
+V_TICKET_HISTORY
 as
 select 
-    t.ticket_id,
-    m.match_id,
+    t.ticket_id as ticket_id,
+    m.match_id as match_id,
     m.team1,
     m.team2,
     m.m_start_time,
@@ -62,155 +121,164 @@ select
     p.discount_coupon_used,
     p.discount_perc_applied,
     t.rfd_id,
-    'Y' as BookingStatus
+    case
+        when t.rfd_id is NULL then 'Y'
+        else 'N'
+        end BOOKING_STATUS
 from 
     ticket t
         inner join customer c on t.cust_id=c.cust_id
-        inner join V_SHOW_SEATING_STRUCTURE s on t.seat_id=s.seat_id
+        inner join V_STADIUM_SEATING_STRUCTURE s on t.seat_id=s.seat_id
         inner join V_PAYMENT_INFORMATION p on t.payment_id=p.payment_id
         inner join match m on t.match_id=m.match_id
 order by m.match_id, t.ticket_id;
 
-select * from V_TICKET_HISTORY;
-
-create or replace view V_SHOW_SEAT_STATUS
+--Show information about seats booking status for all the active matches  
+create or replace view 
+V_SHOW_SEAT_BOOKING_STATUS
 as
 select * from (
     with match_seats as (
         select m.*, s.* 
-        from match m, V_SHOW_SEATING_STRUCTURE s
+        from match m, V_STADIUM_SEATING_STRUCTURE s
     ) select 
-        m.league_name,m.team1, m.team2, to_char(m.m_start_time, 'DD-MON-YYYY') as match_date,
+        m.match_id, m.league_name,m.team1, m.team2, to_char(m.m_start_time, 'DD-MON-YYYY') as match_date,
         m.section_name, m.category_name, m.seat_row, m.seat_no,
         t.ticket_id,
         case
-        when t.ticket_id is NOT NULL then 'Y'
-        else 'N'
-        end BOOKING_STATUS
+            when t.ticket_id is NULL then 'N'
+            else 'Y'
+            end BOOKING_STATUS
         from match_seats m 
-            left outer join V_TICKET_HISTORY t on m.seat_id=t.seat_id and m.match_id=t.match_id
-        where rfd_id is null
+            left outer join V_TICKET_HISTORY t on m.seat_id=t.seat_id and m.match_id=t.match_id and t.BOOKING_STATUS='Y'
+        where m.match_active='Y'
     order by m.match_id, m.seat_id
 );
 
-
--- 3. V_Show_Upcoming_Matches - For CUSTOMERS to see upcoming matches
-create or replace view V_SHOW_UPCOMING_MATCHES as
-select LEAGUE_NAME, TEAM1, TEAM2, M_START_TIME from match 
-where M_START_TIME > SYSTIMESTAMP;
-
--- 4. V_User_Tickets - For CUSTOMERS to review past ticket bookings details
-create or replace view V_USER_TICKETS as
-select c.cust_fname ||' '|| c.cust_lname as cust_name, m.league_name, m.team1, m.team2, m.m_start_time, se.gate_name, se.section_name, ca.category_name, s.seat_row, s.seat_no, t.rfd_id
-from ticket t
-inner join customer c on c.cust_id=t.cust_id
-inner join match m on m.match_id=t.match_id
-inner join seat s on t.seat_id=s.seat_id
-inner join section_category sc on sc.sc_id=s.sc_id
-inner join section se on se.section_id=sc.section_id
-inner join category ca on ca.category_id=sc.category_id
-order by ticket_id;
-
--- 5. V_Available_Seats - For CUSTOMERS to review available seat
-create or replace view V_AVAILABLE_SEATS as
-select league_name, team1, team2, match_date, section_name, category_name, seat_row, seat_no from V_SHOW_SEAT_STATUS
-where booking_status = 'N';
-
- 
---6. V_Tickets_With_Discounts - To understand how a discount scheme affected ticket bookings
-create or replace view V_TICKETS_WITH_DISCOUNTS as
-select c.cust_fname ||' '|| c.cust_lname as cust_name, m.league_name, m.team1, m.team2, m.m_start_time, se.section_name, ca.category_name, s.seat_row, s.seat_no, p.tot_amount, d.coupon_name, d.discount_perc from ticket t
-join payment p on t.payment_id = p.payment_id
-join discount d on p.discount_id = d.discount_id
-inner join seat s on t.seat_id=s.seat_id
-inner join section_category sc on sc.sc_id=s.sc_id
-inner join section se on se.section_id=sc.section_id
-inner join category ca on ca.category_id=sc.category_id
-inner join customer c on c.cust_id=t.cust_id
-inner join match m on m.match_id=t.match_id;
- 
---7. V_Show_Refunded_Tickets - To understand user wise refund detail
-create or replace view V_SHOW_REFUNDED_TICKETS as
-select c.cust_fname ||' '|| c.cust_lname as cust_name, m.league_name, m.team1, m.team2, m.m_start_time, se.gate_name, se.section_name, ca.category_name, s.seat_row, s.seat_no from ticket t
-join refund r on r.rfd_id = t.rfd_id
-inner join customer c on c.cust_id=t.cust_id
-inner join match m on m.match_id=t.match_id
-inner join seat s on t.seat_id=s.seat_id
-inner join section_category sc on sc.sc_id=s.sc_id
-inner join section se on se.section_id=sc.section_id
-inner join category ca on ca.category_id=sc.category_id;
-
--- 8. V_Match_Wise_Attendance - To understand how many people attended match
-create or replace view V_MATCH_WISE_ATTENDANCE as
-select m.league_name, m.team1, m.team2, c.cust_fname ||' '|| c.cust_lname as cust_name, se.gate_name, se.section_name, ca.category_name, s.seat_row, s.seat_no from match m
-inner join ticket t on t.match_id=m.match_id
-inner join verification v on v.ticket_id=t.ticket_id
-inner join customer c on t.cust_id=c.cust_id
-inner join seat s on t.seat_id=s.seat_id
-inner join section_category sc on sc.sc_id=s.sc_id
-inner join section se on se.section_id=sc.section_id
-inner join category ca on ca.category_id=sc.category_id;
- 
---9. V_Yearly_Monthly_Sales - To understand year and month wise sales
-create or replace view V_YEARLY_MONTHLY_SALES
+--Show all the active upoming matches as configured by the STADIUM_MANAGER regardless of whether Price Catalog is added or not
+create or replace view 
+V_UPCOMING_MATCHES
 as
-select * from (
-select to_char(p.p_date_time, 'MON-YYYY'),sum(p.tot_amount) from payment p group by to_char(p.p_date_time, 'MON-YYYY')
-);
- 
----10. V_League_Team_Sales - To understand league and team wise sale
-create or replace view V_LEAGUE_TEAM_SALES
+select Match_ID,LEAGUE_NAME, TEAM1, TEAM2, M_START_TIME from match 
+where M_START_TIME > SYSTIMESTAMP and match_active='Y';
+
+--Show all the tickets that have booking_status='Y' and have discounts on them (Skips the refunded tickets)
+create or replace view
+V_TICKETS_WITH_DISCOUNTS 
 as
-select * from (
-with a as
-(
-    select distinct match_id, payment_id 
-    from ticket
-) 
-select m.league_name, m.team1, m.team2, sum(p.tot_amount) from a
-inner join match m on a.match_id=m.match_id
-inner join payment p on a.payment_id=p.payment_id
-group by m.league_name, m.team1, m.team2
-);
+select * from V_TICKET_HISTORY where DISCOUNT_COUPON_USED is not null and booking_status='Y';
 
---Granting access to views to specific users
-grant select on V_SHOW_SEATING_STRUCTURE to STADIUM_MANAGER;
+--Show all the tickets that were refunded
+create or replace view 
+V_REFUNDED_TICKETS
+as
+select * from V_TICKET_HISTORY where RFD_ID is not null;
 
-grant select on V_SHOW_SEAT_STATUS to STADIUM_MANAGER;
+--Show match-wise seat status so as to whether it was purchased and attended (Only for active matches)
+create or replace view 
+V_MATCH_WISE_ATTENDANCE
+as
+select
+    s.match_id,
+    s.section_name,
+    s.category_name,
+    s.seat_row,
+    s.seat_no,
+    case
+    when t.ticket_id is NOT NULL then 'Y'
+    else 'N' 
+    end Purchased,
+    case
+    when v.ticket_id is NOT NULL then 'Y'
+    else 'N' 
+    end Attended
+from
+    V_SHOW_SEAT_BOOKING_STATUS s
+    left outer join verification v on s.ticket_id=v.ticket_id
+    left outer join V_TICKET_HISTORY t on s.ticket_id=t.ticket_id;
 
-grant select on V_SHOW_UPCOMING_MATCHES to STADIUM_MANAGER, CUSTOMER;
+--Show yearly-monthly sales of stadium (disregards the refund ticket amount)
+create or replace view 
+V_YEARLY_MONTHLY_SALES
+as
+select 
+    to_char(p1.p_date_time, 'MON-YYYY') as MonthYear,
+    sum(p1.tot_amount) as TOT_AMOUNT_PAID
+from payment p1
+where p1.payment_id in (
+    select p.payment_id from payment p
+    minus
+    select r.payment_id from v_refunded_tickets r
+) group by to_char(p1.p_date_time, 'MON-YYYY');
 
-grant select on V_USER_TICKETS to STADIUM_MANAGER, CUSTOMER;
 
-grant select on V_AVAILABLE_SEATS to STADIUM_MANAGER, CUSTOMER;
+--Show league-team sales of stadium (disregards the refund ticket amount, considers team1 vs team2 as distinct in one league)
+create or replace view
+V_LEAGUE_TEAM_SALES
+as
+with unique_payments as (
+    select 
+        distinct 
+        m.league_name, 
+        m.team1,
+        m.team2,
+        case
+            when team1<team2
+            then team1 || ' vs ' || team2
+            when team1>team2
+            then team2 || ' vs ' || team1
+        end participant_teams,
+        t.payment_id
+    from ticket t 
+            inner join match m on t.match_id=m.match_id
+    where t.rfd_id is null
+)   select
+        up.league_name,
+        up.participant_teams,
+        sum(p.tot_amount) as TotalSales
+    from 
+        unique_payments up
+            inner join payment p on up.payment_id=p.payment_id
+    group by up.league_name, up.participant_teams;
+    
+create or replace view
+V_SHOW_SEAT_STATUS_CUSTOMER
+as
+select
+    a.match_id,
+    a.league_name,
+    a.team1,
+    a.team2,
+    a.match_date,
+    a.section_name,
+    a.category_name,
+    a.seat_row,
+    a.seat_no,
+    a.booking_status,
+    b.ticket_cost
+from 
+    V_SHOW_SEAT_BOOKING_STATUS a
+        inner join V_PRICE_CATALOG b
+            on a.match_id=b.match_id 
+                and a.section_name=b.section_name
+                and a.category_name=b.category_name;
 
-grant select on V_TICKETS_WITH_DISCOUNTS to FINANCE_MANAGER;
 
-grant select on V_SHOW_REFUNDED_TICKETS to FINANCE_MANAGER;
+--granting  view access to specific user
+grant select on  V_SECTION_WISE_CATEGORY to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on  V_STADIUM_SEATING_STRUCTURE to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on  V_MATCH_TIMETABLE to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on  V_MATCH_WISE_ATTENDANCE to STADIUM_MANAGER, STADIUM_SECURITY;
+grant select on  V_TICKET_HISTORY to STADIUM_MANAGER;
 
-grant select on V_MATCH_WISE_ATTENDANCE to STADIUM_MANAGER, STADIUM_SECURITY;
+grant select on  V_PRICE_CATALOG to FINANCE_MANAGER;
+grant select on  V_DISCOUNTS to FINANCE_MANAGER;
+grant select on  V_TICKETS_WITH_DISCOUNTS to FINANCE_MANAGER;
+grant select on  V_REFUNDED_TICKETS to FINANCE_MANAGER;
+grant select on  V_YEARLY_MONTHLY_SALES to FINANCE_MANAGER;
+grant select on  V_LEAGUE_TEAM_SALES to FINANCE_MANAGER;
+grant select on  V_PAYMENT_INFORMATION to FINANCE_MANAGER;
 
-grant select on V_YEARLY_MONTHLY_SALES to FINANCE_MANAGER;
-
-grant select on V_LEAGUE_TEAM_SALES to FINANCE_MANAGER;
-
--- Reports
-select * from V_SHOW_SEATING_STRUCTURE;
-
-select * from V_SHOW_SEAT_STATUS;
-
-select * from V_SHOW_UPCOMING_MATCHES;
-
-select * from V_USER_TICKETS;
-
-select * from V_AVAILABLE_SEATS;
-
-select * from V_TICKETS_WITH_DISCOUNTS;
-
-select * from V_SHOW_REFUNDED_TICKETS;
-
-select * from V_MATCH_WISE_ATTENDANCE;
-
-select * from V_YEARLY_MONTHLY_SALES;
-
-select * from V_LEAGUE_TEAM_SALES;
+grant select on  V_UPCOMING_MATCHES to STADIUM_MANAGER, FINANCE_MANAGER, CUSTOMER, STADIUM_SECURITY;
+grant select on  V_SHOW_SEAT_BOOKING_STATUS to STADIUM_MANAGER;
+grant select on  V_SHOW_SEAT_STATUS_CUSTOMER to CUSTOMER;

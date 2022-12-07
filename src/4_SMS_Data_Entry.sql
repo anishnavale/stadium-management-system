@@ -567,6 +567,8 @@ INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time
 VALUES (2,'T20','Australia','New Zealand', TO_DATE('2022-12-20 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2022-12-20 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
 INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
 VALUES (3,'IPL','Mumbai','Chennai', TO_DATE('2023-01-03 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2023-01-03 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
+INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
+VALUES(4, 'IPL', 'Mumbai', 'Banglore', TO_DATE('04-01-2023 10:00:00 AM', 'dd-mm-yyyy HH:MI:SS AM'), TO_DATE('04-01-2023 02:00:00 PM', 'dd-mm-yyyy HH:MI:SS AM'), 'N');
 
 -- Price_Catalog table
 INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
@@ -766,4 +768,100 @@ VALUES (15, TO_DATE('2022-11-01 09:44:00','yyyy-mm-dd hh24:mi:ss'));
 INSERT INTO Verification (ticket_id, v_date_time)
 VALUES (16, TO_DATE('2022-11-01 09:45:00','yyyy-mm-dd hh24:mi:ss'));
 
+commit;
+
+
+-- Special dataset for showing unique features in SALES related views
+
+--Create Match 6
+INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
+VALUES(6, 'Champions League T20', 'Mumbai', 'Banglore', TO_DATE('06-01-2023 10:00:00 AM', 'dd-mm-yyyy HH:MI:SS AM'), TO_DATE('06-01-2023 02:00:00 PM', 'dd-mm-yyyy HH:MI:SS AM'), 'Y');
+
+--Create Match 5
+INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
+VALUES(5, 'IPL', 'Banglore', 'Mumbai', TO_DATE('05-01-2023 10:00:00 AM', 'dd-mm-yyyy HH:MI:SS AM'), TO_DATE('05-01-2023 02:00:00 PM', 'dd-mm-yyyy HH:MI:SS AM'), 'Y');
+
+--Create price catalog for match 5
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (33,5,1,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (34,5,2,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (35,5,3,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (36,5,4,30);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (37,5,5,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (38,5,6,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (39,5,7,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (40,5,8,30);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (41,5,9,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (42,5,10,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (43,5,11,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (44,5,12,30);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (45,5,13,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (46,5,14,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (47,5,15,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (48,5,16,30);
+
+--Create price catalog for match 6
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (49,6,1,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (50,6,2,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (51,6,3,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (52,6,4,30);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (53,6,5,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (54,6,6,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (55,6,7,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (56,6,8,30);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (57,6,9,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (58,6,10,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (59,6,11,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (60,6,12,30);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (61,6,13,5);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (62,6,14,10);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (63,6,15,15);
+INSERT INTO price_catalog (pc_id, match_id, sc_id, amount)
+VALUES (64,6,16,30);
+
+--Payment for match 5 ticket is done worth 5$
+INSERT INTO payment (payment_id, discount_id, tot_amount, p_date_time, payment_mode)
+VALUES (7,NULL,5,TO_DATE('2022-10-05 11:30:00','yyyy-mm-dd hh24:mi:ss'),'Online');
+
+--Payment for match 6 ticket is done
+INSERT INTO payment (payment_id, discount_id, tot_amount, p_date_time, payment_mode)
+VALUES (8,NULL,10,TO_DATE('2022-10-05 11:30:00','yyyy-mm-dd hh24:mi:ss'),'Online');
+
+--Ticket is generated for match 5 worth $5
+INSERT INTO ticket (ticket_id, cust_id, seat_id, rfd_id, payment_id, match_id)
+VALUES (30,1,1,NULL,7,5);
+
+--Ticket is generated for match 6 worth $10
+INSERT INTO ticket (ticket_id, cust_id, seat_id, rfd_id, payment_id, match_id)
+VALUES (31,1,11,NULL,8,6);
 commit;
