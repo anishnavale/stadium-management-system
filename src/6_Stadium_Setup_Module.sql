@@ -483,7 +483,7 @@ end;
 
 --proc : PROC_ADD_NEW_SEATS(SectionCategoryID, SeatRow, NumberOfSeatsInRow)
 create or replace procedure
-PROC_ADD_NEW_CATEGORY(
+PROC_ADD_NEW_SEATS(
     SectionCategoryID NUMBER,
     SeatRow VARCHAR,
     NumberOfSeatsInRow NUMBER
@@ -495,6 +495,7 @@ PROC_ADD_NEW_CATEGORY(
     exp_SECTION_CATEGORY_NOT_EXISTS exception;
     exp_SEAT_ROW_ALREADY_EXISTS exception;
     exp_NULL_VALUE exception;
+    exp_INVALID_SEAT_COUNT exception;
 begin
 
     if SectionCategoryID IS NULL
@@ -515,6 +516,19 @@ begin
     then
         raise exp_SEAT_ROW_ALREADY_EXISTS;
     end if;
+    
+    if NumberOfSeatsInRow<=0
+    then
+        raise exp_INVALID_SEAT_COUNT;
+    end if;
+    
+    for seatNo in 1..NumberOfSeatsInRow
+    loop
+        insert into seat values(SEQ_SEA_SEAT_ID.nextval, SectionCategoryID, SeatRow, seatNo);
+    end loop;
+    
+    commit;
+    dbms_output.put_line(NumberOfSeatsInRow || ' Seats added to '|| '('||'SectionCategoryID: '||SectionCategoryID||' ,'||' SeatRow: '||SeatRow||')');
 
 exception
 
@@ -546,6 +560,15 @@ exception
         dbms_output.put_line('---------------------------');
         dbms_output.put_line('SectionCategoryID: ' || SectionCategoryID);
         dbms_output.put_line('SeatRowID: ' || SeatRow);
+        dbms_output.put_line('---------------------------');
+        
+    when exp_INVALID_SEAT_COUNT
+    then
+        dbms_output.new_line;
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('INVALID SEAT COUNT FOR SEAT ROW, GIVE THE SEAT COUNT >=1'); 
+        dbms_output.put_line('---------------------------');
+        dbms_output.put_line('NumberOfSeatsInRow: ' || NumberOfSeatsInRow);
         dbms_output.put_line('---------------------------');
         
     when others
