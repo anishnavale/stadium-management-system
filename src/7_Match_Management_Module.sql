@@ -91,6 +91,7 @@ BEGIN
     INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
     VALUES (SEQ_MAT.nextval,in_league_name,in_team1,in_team2,in_start_time,in_end_time,in_match_active);
     commit;
+    dbms_output.put_line('Match Added');
     END IF;
     
     exception
@@ -136,7 +137,8 @@ BEGIN
   FROM match
   WHERE in_start_time between m_start_time and m_end_time or
   in_end_time between m_start_time and m_end_time
-  and in_start_time < in_end_time;
+  and in_start_time < in_end_time
+  and match_id != in_match_id;
 
   IF is_true > 0 THEN
         dbms_output.put_line('Time Conflict');
@@ -145,6 +147,7 @@ BEGIN
     league_name = in_league_name, team1 = in_team1, team2 = in_team2, m_start_time = in_start_time, m_end_time = in_end_time, match_active = in_match_active
     WHERE match_id = in_match_id;
     commit;
+    dbms_output.put_line('Match Modified');
     END IF;
     
     exception
@@ -185,3 +188,16 @@ END;
 /
 */
 
+-- Test Cases
+
+-- Creating a new match having similar time as another match
+execute PROC_ADD_NEW_MATCH('IPL','Punjab','Chennai', TO_DATE('2023-01-03 12:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2023-01-03 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
+
+-- Creating a new match having different time
+execute PROC_ADD_NEW_MATCH('IPL','Punjab','Chennai', TO_DATE('2023-03-03 12:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2023-03-03 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
+
+-- Modifying a match having similar time as another match
+execute PROC_MODIFY_MATCH(2,'IPL','Mumbai','Chennai', TO_DATE('2022-12-20 10:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2022-12-20 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
+
+-- Modifying a match having different time
+execute PROC_MODIFY_MATCH(2,'IPL','Mumbai','Chennai', TO_DATE('2023-04-03 12:00:00','yyyy-mm-dd hh24:mi:ss'),TO_DATE('2023-04-03 14:00:00','yyyy-mm-dd hh24:mi:ss'),'Y');
