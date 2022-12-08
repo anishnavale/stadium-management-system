@@ -27,22 +27,6 @@ with sc as (
 from seat a inner join sc b on a.sc_id = b.sc_id
 order by a.seat_id;
 
---Show active matches only as configured by the STADIUM_MANAGER
-create or replace view
-V_MATCH_TIMETABLE
-as
-select 
-    match_id as match_id,
-    league_name,
-    team1,
-    team2,
-    m_start_time,
-    m_end_time
-from
-    match
-where
-    match_active='Y';
-
 --Show price catalog for matches as configured by the FINANCE_MANAGER 
 create or replace view
 V_PRICE_CATALOG
@@ -143,7 +127,7 @@ select * from (
         from match m, V_STADIUM_SEATING_STRUCTURE s
     ) select 
         m.match_id, m.league_name,m.team1, m.team2, to_char(m.m_start_time, 'DD-MON-YYYY') as match_date,
-        m.section_name, m.category_name, m.seat_row, m.seat_no,
+        m.seat_id, m.section_name, m.category_name, m.seat_row, m.seat_no,
         t.ticket_id,
         case
             when t.ticket_id is NULL then 'N'
@@ -250,6 +234,7 @@ select
     a.team1,
     a.team2,
     a.match_date,
+    a.seat_id,
     a.section_name,
     a.category_name,
     a.seat_row,
@@ -267,7 +252,6 @@ from
 --granting  view access to specific user
 grant select on  V_SECTION_WISE_CATEGORY to STADIUM_MANAGER, FINANCE_MANAGER;
 grant select on  V_STADIUM_SEATING_STRUCTURE to STADIUM_MANAGER, FINANCE_MANAGER;
-grant select on  V_MATCH_TIMETABLE to STADIUM_MANAGER, FINANCE_MANAGER;
 grant select on  V_MATCH_WISE_ATTENDANCE to STADIUM_MANAGER, STADIUM_SECURITY;
 grant select on  V_TICKET_HISTORY to STADIUM_MANAGER;
 
