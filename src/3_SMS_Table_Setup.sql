@@ -575,3 +575,38 @@ BEGIN
     dbms_output.put_line('---------------------------');
 END;
 /
+
+BEGIN
+    dbms_output.put_line('---------------------------');
+    dbms_output.put_line('TRYING TO INDEXES');
+    dbms_output.put_line('---------------------------');
+END;
+/
+
+-- Create Index for Seat Table
+CREATE INDEX seat_index ON seat(seat_row);
+
+-- Create Index for Verification Table
+CREATE INDEX verification_index ON verification(v_date_time);
+
+-- Create Index for Payment Table
+CREATE INDEX payment_index ON payment(p_date_time);
+
+-- Create Index for Customer Table
+CREATE INDEX customer_index ON customer(cust_lname);
+
+-- Create Index for Refund Table
+CREATE INDEX refund_index ON refund(r_date_time);
+
+-- Create Index for Match Table
+CREATE INDEX match_index ON match(league_name);
+
+-- Create Index for Discount Table
+CREATE INDEX discount_index ON discount(d_start_date);
+
+BEGIN
+    dbms_output.put_line('---------------------------');
+    dbms_output.put_line('ALL THE SMS RELATED INDEXES HAVE BEEN CREATED SUCCESSFULLY');
+    dbms_output.put_line('---------------------------');
+END;
+/
