@@ -1,0 +1,35 @@
+create or replace procedure proc_add_in_price_catlog(match_id_val int, section_id_val int, amount_val int)
+as
+cursor c_match is select * from match where match_id = match_id_val;
+cursor c_section is select * from section where section_id = section_id_val;
+c_m c_match%ROWTYPE;
+c_s c_section%ROWTYPE;
+begin
+    -- check if valid match_id
+    open c_match;
+    fetch c_match into c_m;
+    if c_match%NOTFOUND then
+        -- Put exeption here when matchid is not found
+        dbms_output.put_line('Cursor is empty');
+        RAISE_APPLICATION_ERROR(-20000, 'Match ID not found');
+    end if;
+    close c_match;
+
+    -- check if valid match_id
+    open c_section;
+    fetch c_section into c_s;
+    if c_section%NOTFOUND then
+        -- Put exeption here when matchid is not found
+        dbms_output.put_line('Cursor is empty');
+        RAISE_APPLICATION_ERROR(-20000, 'Section ID not found');
+    end if;
+    close c_section;
+    
+    dbms_output.put_line('MatchID and SectionID is valid');
+    dbms_output.put_line('Inserting data into price catlog');
+    
+    insert into price_catalog values( PRICE_CATALOG_SEQUENCE.nextval, match_id_val, section_id_val, amount_val);
+    dbms_output.put_line('Inserting Successful !');
+    commit;
+end;
+/
