@@ -1,0 +1,13 @@
+
+create or replace function func_check_date(date_ varchar2, format_ varchar2)
+return varchar2
+is
+date_valid date;
+begin
+    select to_date(date_, format_) into date_valid from dual;
+    return 'y';
+    exception when others then return 'n';
+end;
+/
+
+select func_check_date('01-13-2022','dd-mm-yyyy') from dual;
