@@ -1,0 +1,30 @@
+create or replace procedure proc_add_discount (coupon_name_val varchar2, discount_perc_val int, start_date varchar2, end_date varchar2)
+as
+date_ varchar2(1);
+begin
+    if discount_perc_val between 1 and 100 then
+        dbms_output.put_line('Valid Discount');
+    else
+        dbms_output.put_line('Invalid discount');
+        RAISE_APPLICATION_ERROR(-20000, 'Invalid discount');
+    end if;
+    
+    select func_check_date(start_date, 'yyyymmdd') into date_ from dual;
+    if date_ = 'n' then 
+        dbms_output.put_line('Invalid date');
+        RAISE_APPLICATION_ERROR(-20000, 'Invalid date');
+    end if;
+    
+    select func_check_date(end_date, 'yyyymmdd') into date_ from dual;
+        if date_ = 'n' then 
+        dbms_output.put_line('Invalid date');
+        RAISE_APPLICATION_ERROR(-20000, 'Invalid date');
+    end if;
+    
+    dbms_output.put_line('Inserting data into discount');
+    
+    insert into discount values(discount_sequence.nextval,coupon_name_val, discount_perc_val, to_date(start_date, 'yyyymmdd'), to_date(end_date, 'yyyymmdd'));
+    commit;
+    dbms_output.put_line('Insert Successful !');
+end;
+/
