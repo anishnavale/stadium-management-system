@@ -1,0 +1,40 @@
+--select PRICE_CATALOG_SEQUENCE.nextval from dual;
+
+select * from user_sequences;
+
+set serveroutput on;
+exec proc_add_in_price_catlog(3,2,998);
+
+select * from price_catalog;
+select * from all_sequences
+where sequence_name like '%PRICE%';
+/*
+sequence-> price_catelog.sequence-
+CREATE SEQUENCE price_catalog_sequence
+ START WITH     25
+ INCREMENT BY   1
+ NOCACHE
+ NOCYCLE;
+ 
+ CREATE SEQUENCE discount_sequence
+ START WITH     1
+ INCREMENT BY   1
+ NOCACHE
+ NOCYCLE;
+*/
+select * from discount;
+--select discount_sequence.nextval from dual;
+set serveroutput on;
+-- yyyymmdd
+exec proc_add_discount('abc', 99, '20213101', '20210101');
+select func_check_date('20210101', 'yyyymmdd') from dual;
+select * from discount;
+-- coupon_name, discount_perc, d_start_date, d_end_date
+
+select * from user_sequences
+where sequence_name = 'DISCOUNT_SEQUENCE';
+
+
+alter sequence discount_sequence increment by -1;
+select discount_sequence.nextval from dual;
+alter sequence discount_sequence increment by 1;
