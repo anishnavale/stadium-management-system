@@ -46,6 +46,7 @@ execute immediate 'GRANT CREATE USER, DROP USER, EXECUTE ANY TYPE, EXECUTE ANY P
 to ' || user_name;
 
 execute immediate 'grant CREATE SESSION to ' || user_name || ' WITH ADMIN OPTION';
+execute immediate 'grant execute any type to ' || user_name || ' with admin option';
 
 dbms_output.put_line('Granted Appropriate Roles and Privileges to '|| user_name);
 
@@ -68,5 +69,5 @@ exception
 end;
 /
 
-execute create_sms_app_admin_user('APP_ADMIN_TEST', 'AppAdminTest@12345', 100);
+execute create_sms_app_admin_user('APP_ADMIN', 'AppAdmin@12345', 100);
 

@@ -30,7 +30,7 @@ begin
     dbms_output.put_line('---------------------------');
     
     --STADIUM_MANAGER
-    currentUser:='STADIUM_MANAGER_TEST';
+    currentUser:='STADIUM_MANAGER';
     dbms_output.put_line('Check if user: '|| currentUser ||' exists already');
     select count(1) into userCount from all_users where username=currentUser;
     if userCount>0
@@ -49,7 +49,7 @@ begin
     dbms_output.put_line('---------------------------');
     
     --FINANCE_MANAGER
-    currentUser:='FINANCE_MANAGER_TEST';
+    currentUser:='FINANCE_MANAGER';
     dbms_output.put_line('Check if user: '|| currentUser ||' exists already');
     select count(1) into userCount from all_users where username=currentUser;
     if userCount>0
@@ -68,7 +68,7 @@ begin
     dbms_output.put_line('---------------------------');
     
     --CUSTOMER
-    currentUser:='CUSTOMER_TEST';
+    currentUser:='CUSTOMER';
     dbms_output.put_line('Check if user: '|| currentUser ||' exists already');
     select count(1) into userCount from all_users where username=currentUser;
     if userCount>0
@@ -88,7 +88,7 @@ begin
     
     
     --STADIUM_SECURITY
-    currentUser:='STADIUM_SECURITY_TEST';
+    currentUser:='STADIUM_SECURITY';
     dbms_output.put_line('Check if user: '|| currentUser ||' exists already');
     select count(1) into userCount from all_users where username=currentUser;
     if userCount>0

@@ -581,3 +581,44 @@ BEGIN
     dbms_output.put_line('---------------------------');
 END;
 /
+
+-- Create Index for Seat Table
+CREATE INDEX seat_index ON seat(seat_row);
+
+-- Create Index for Verification Table
+CREATE INDEX verification_index ON verification(v_date_time);
+
+-- Create Index for Payment Table
+CREATE INDEX payment_index ON payment(p_date_time);
+
+-- Create Index for Customer Table
+CREATE INDEX customer_index ON customer(cust_lname);
+
+-- Create Index for Refund Table
+CREATE INDEX refund_index ON refund(r_date_time);
+
+-- Create Index for Match Table
+CREATE INDEX match_index ON match(league_name);
+
+-- Create Index for Discount Table
+CREATE INDEX discount_index ON discount(d_start_date);
+
+BEGIN
+    dbms_output.put_line('---------------------------');
+    dbms_output.put_line('ALL THE SMS RELATED INDEXES HAVE BEEN CREATED SUCCESSFULLY');
+    dbms_output.put_line('---------------------------');
+END;
+/
+
+grant select on APP_ADMIN.SECTION to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on APP_ADMIN.CATEGORY to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on APP_ADMIN.SECTION_CATEGORY to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on APP_ADMIN.SEAT to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on APP_ADMIN.MATCH to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on APP_ADMIN.PRICE_CATALOG to FINANCE_MANAGER;
+grant select on APP_ADMIN.DISCOUNT to FINANCE_MANAGER;
+grant select on APP_ADMIN.CUSTOMER to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on APP_ADMIN.PAYMENT to FINANCE_MANAGER;
+grant select on APP_ADMIN.TICKET to STADIUM_MANAGER, FINANCE_MANAGER, STADIUM_SECURITY;
+grant select on APP_ADMIN.REFUND to FINANCE_MANAGER;
+grant select on APP_ADMIN.VERIFICATION to STADIUM_SECURITY;
