@@ -514,7 +514,7 @@ create or replace PACKAGE BODY PACK_MATCH_MANAGEMENT AS
         
         mid:=SEQ_MAT_MATCH_ID.nextval;
         INSERT INTO match (match_id, league_name, team1, team2, m_start_time, m_end_time, match_active)
-        VALUES (SEQ_MAT_MATCH_ID.nextval,in_league_name,in_team1,in_team2,in_start_time,in_end_time,in_match_active);
+        VALUES (mid,in_league_name,in_team1,in_team2,in_start_time,in_end_time,in_match_active);
         commit;
         dbms_output.put_line('Match Added: ' || mid);
         END IF;
@@ -1489,4 +1489,4 @@ grant execute on APP_ADMIN.PACK_STADIUM_MANAGEMENT to STADIUM_MANAGER;
 grant execute on APP_ADMIN.PACK_MATCH_MANAGEMENT to STADIUM_MANAGER;
 grant execute on APP_ADMIN.PACK_PRICING_MANAGEMENT to FINANCE_MANAGER;
 grant execute on APP_ADMIN.PACK_TICKET_MANAGEMENT to CUSTOMER;
-grant execute on APP_ADMIN.PACK_GAMEDAY_MANAGEMENT to STADIUM_MANAGER;
+grant execute on APP_ADMIN.PACK_GAMEDAY_MANAGEMENT to STADIUM_SECURITY;

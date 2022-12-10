@@ -258,6 +258,11 @@ from
                 and a.category_name=b.category_name
 order by a.match_id, a.seat_id;
 
+--Show user active tickets
+create or replace view
+V_USER_TICKETS
+as
+select * from V_TICKET_HISTORY where booking_status='Y';
 
 --granting  view access to specific user
 grant select on  APP_ADMIN.V_SECTION_WISE_CATEGORY to STADIUM_MANAGER, FINANCE_MANAGER;
@@ -276,3 +281,4 @@ grant select on  APP_ADMIN.V_PAYMENT_INFORMATION to FINANCE_MANAGER;
 grant select on  APP_ADMIN.V_UPCOMING_MATCHES to STADIUM_MANAGER, FINANCE_MANAGER, CUSTOMER, STADIUM_SECURITY;
 grant select on  APP_ADMIN.V_SHOW_SEAT_BOOKING_STATUS to STADIUM_MANAGER;
 grant select on  APP_ADMIN.V_SHOW_SEAT_STATUS_CUSTOMER to CUSTOMER;
+grant select on  APP_ADMIN.V_USER_TICKETS to CUSTOMER;
