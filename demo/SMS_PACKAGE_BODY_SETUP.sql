@@ -1440,9 +1440,16 @@ create or replace PACKAGE BODY PACK_GAMEDAY_MANAGEMENT AS
         in_date_time TIMESTAMP
     )
     IS
-      is_true NUMBER;
-      is_true1 NUMBER;
+        c1 number;
+        c2 number;
+        c3 number;
+        c4 number;
       exp_NULL_VALUE exception;
+      exp_TICKETDOESNOTEXIST exception;
+      exp_VALIDTICKET_TOO_EARLY exception;
+      exp_NOTTODAYTICKET exception;
+      exp_TICKETALREADYUSED exception;
+      
     BEGIN
 
         if in_ticket_id is NULL
@@ -1450,24 +1457,41 @@ create or replace PACKAGE BODY PACK_GAMEDAY_MANAGEMENT AS
         then raise exp_NULL_VALUE;
         end if;
 
-      SELECT count(*)
-      INTO is_true
-      FROM ticket t
-      inner join match m on t.match_id = m.match_id
-      WHERE rfd_id is NULL and ticket_id = in_ticket_id and to_char(m.m_start_time, 'dd-mm-yy') = to_char(in_date_time, 'dd-mm-yy') and extract(hour from (m.m_start_time - in_date_time)) between -1 and 3;
 
-      SELECT count(*) into is_true1
-      FROM verification
-      where in_ticket_id = ticket_id;
+        select count(1) into c1 from V_USER_TICKETS
+        where ticket_id = in_ticket_id;
+        
+        if c1<=0 then
+            raise exp_TICKETDOESNOTEXIST;
+        else
+            select count(1) into c2 from V_USER_TICKETS
+            where ticket_id = in_ticket_id and extract (hour from m_start_time - in_date_time ) between -1 and 3;
+            
+            if c2<=0 then
+            
+                select count(1) into c3 from V_USER_TICKETS
+                where ticket_id = in_ticket_id and to_char(m_start_time, 'dd-mm-yyyy') = to_char(in_date_time, 'dd-mm-yyyy');
+                
+                if c3<=0 then
+                    raise exp_NOTTODAYTICKET;
+                end if;
+                raise exp_VALIDTICKET_TOO_EARLY;
+            else
+            
+                select count(1) into c4 from verification where ticket_id = in_ticket_id;
+                
+                if c4!=0 then
+                    raise exp_TICKETALREADYUSED;
+                end if;
+                
+                INSERT INTO verification (ticket_id, v_date_time)
+                VALUES (in_ticket_id, in_date_time);
+                commit;
+                dbms_output.put_line('Valid Ticket : You can enter the stadium');
+            end if;
 
-      IF is_true != 1 or is_true1 != 0 THEN
-            dbms_output.put_line('Invalid Ticket');
-        ELSE
-            INSERT INTO verification (ticket_id, v_date_time)
-            VALUES (in_ticket_id, in_date_time);
-            commit;
-            dbms_output.put_line('Valid Ticket');
-        END IF;
+        end if;
+        
 
         exception
             when exp_NULL_VALUE
@@ -1478,6 +1502,33 @@ create or replace PACKAGE BODY PACK_GAMEDAY_MANAGEMENT AS
             dbms_output.put_line('TicketID: ' || in_ticket_id);
             dbms_output.put_line('V_Date_Time: ' || in_date_time);
             dbms_output.put_line('---------------------------');
+            
+            when exp_TICKETDOESNOTEXIST
+            then 
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('NO ENTRY : Ticket does not exist at all -> ' || in_ticket_id); 
+            dbms_output.put_line('---------------------------');
+            
+            when exp_VALIDTICKET_TOO_EARLY
+            then
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('NO ENTRY : Todays ticket but too early to admit (Come 2 hours before, max 1 hour late) -> ' || in_ticket_id); 
+            dbms_output.put_line('---------------------------');
+            
+            when exp_NOTTODAYTICKET
+            then
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('NO ENTRY : Valid ticket, but not for todays match -> ' || in_ticket_id); 
+            dbms_output.put_line('---------------------------');
+            
+            when exp_TICKETALREADYUSED
+            then
+            dbms_output.put_line('---------------------------');
+            dbms_output.put_line('NO ENTRY : Ticket has been used already for today -> ' || in_ticket_id); 
+            dbms_output.put_line('---------------------------');
+            
+            
+            
     END PROC_VERIFY_TICKET;
 
 END PACK_GAMEDAY_MANAGEMENT;
