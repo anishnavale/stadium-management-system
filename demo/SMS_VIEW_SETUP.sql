@@ -1,3 +1,10 @@
+/*
+
+VIEW SETUP
+
+*/
+
+
 set serveroutput on;
 purge recyclebin;
 
@@ -60,8 +67,8 @@ as
 select
     d.coupon_name as COUPON_CODE,
     d.discount_perc as DISCOUNT,
-    to_char(d.d_start_date, 'DD-MON-YYYY HH:MI:SS AM') AS VALID_FROM,
-    to_char(d.d_end_date, 'DD-MON-YYYY HH:MI:SS AM') AS VALID_TILL
+    to_timestamp(to_char(d.d_start_date, 'DD-MON-YYYY HH:MI:SS AM'), 'DD-MON-YYYY HH:MI:SS AM') AS VALID_FROM,
+    to_timestamp(to_char(d.d_end_date, 'DD-MON-YYYY HH:MI:SS AM'), 'DD-MON-YYYY HH:MI:SS AM') AS VALID_TILL
 from
     discount d;
     
@@ -72,7 +79,7 @@ as
 SELECT
     p.payment_id as PAYMENT_ID,
     p.tot_amount as TOT_AMOUNT_PAID,
-    p.p_date_time as PAYMENT_TIME,
+    to_timestamp(to_char(p.p_date_time, 'DD-MON-YYYY HH:MI:SS AM'), 'DD-MON-YYYY HH:MI:SS AM') as PAYMENT_TIME,
     p.payment_mode as PAYMENT_MODE,
     d.coupon_name as DISCOUNT_COUPON_USED,
     nvl(d.discount_perc, 0) as DISCOUNT_PERC_APPLIED
@@ -89,13 +96,14 @@ select
     m.match_id as match_id,
     m.team1,
     m.team2,
-    m.m_start_time,
-    m.m_end_time,
+    to_timestamp(to_char(m.m_start_time, 'DD-MON-YYYY HH:MI:SS AM'), 'DD-MON-YYYY HH:MI:SS AM') as m_start_time,
+    to_timestamp(to_char(m.m_end_time, 'DD-MON-YYYY HH:MI:SS AM'), 'DD-MON-YYYY HH:MI:SS AM') as m_end_time,
     s.seat_id,
     s.section_name,
     s.category_name,
     s.seat_row,
     s.seat_no,
+    c.cust_id,
     c.cust_fname,
     c.cust_lname,
     c.cust_email,
@@ -126,7 +134,7 @@ select * from (
         select m.*, s.* 
         from match m, V_STADIUM_SEATING_STRUCTURE s
     ) select 
-        m.match_id, m.league_name,m.team1, m.team2, to_char(m.m_start_time, 'DD-MON-YYYY') as match_date,
+        m.match_id, m.league_name,m.team1, m.team2, to_timestamp(to_char(m.m_start_time, 'DD-MON-YYYY HH:MI:SS AM'), 'DD-MON-YYYY HH:MI:SS AM') as match_date,
         m.seat_id, m.section_name, m.category_name, m.seat_row, m.seat_no,
         t.ticket_id,
         case
@@ -143,8 +151,9 @@ select * from (
 create or replace view 
 V_UPCOMING_MATCHES
 as
-select Match_ID,LEAGUE_NAME, TEAM1, TEAM2, M_START_TIME from match 
-where M_START_TIME > SYSTIMESTAMP and match_active='Y';
+select Match_ID,LEAGUE_NAME, TEAM1, TEAM2, to_char(M_START_TIME, 'DD-MM-YYYY HH:MI:SS AM') as M_START_TIME from match 
+where M_START_TIME > SYSTIMESTAMP and match_active='Y'
+order by to_date(M_START_TIME, 'DD-MM-YYYY HH:MI:SS AM');
 
 --Show all the tickets that have booking_status='Y' and have discounts on them (Skips the refunded tickets)
 create or replace view
@@ -246,23 +255,30 @@ from
         inner join V_PRICE_CATALOG b
             on a.match_id=b.match_id 
                 and a.section_name=b.section_name
-                and a.category_name=b.category_name;
+                and a.category_name=b.category_name
+order by a.match_id, a.seat_id;
 
+--Show user active tickets
+create or replace view
+V_USER_TICKETS
+as
+select * from V_TICKET_HISTORY where booking_status='Y';
 
 --granting  view access to specific user
-grant select on  V_SECTION_WISE_CATEGORY to STADIUM_MANAGER, FINANCE_MANAGER;
-grant select on  V_STADIUM_SEATING_STRUCTURE to STADIUM_MANAGER, FINANCE_MANAGER;
-grant select on  V_MATCH_WISE_ATTENDANCE to STADIUM_MANAGER, STADIUM_SECURITY;
-grant select on  V_TICKET_HISTORY to STADIUM_MANAGER;
+grant select on  APP_ADMIN.V_SECTION_WISE_CATEGORY to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_STADIUM_SEATING_STRUCTURE to STADIUM_MANAGER, FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_MATCH_WISE_ATTENDANCE to STADIUM_MANAGER, STADIUM_SECURITY;
+grant select on  APP_ADMIN.V_TICKET_HISTORY to STADIUM_MANAGER;
 
-grant select on  V_PRICE_CATALOG to FINANCE_MANAGER;
-grant select on  V_DISCOUNTS to FINANCE_MANAGER;
-grant select on  V_TICKETS_WITH_DISCOUNTS to FINANCE_MANAGER;
-grant select on  V_REFUNDED_TICKETS to FINANCE_MANAGER;
-grant select on  V_YEARLY_MONTHLY_SALES to FINANCE_MANAGER;
-grant select on  V_LEAGUE_TEAM_SALES to FINANCE_MANAGER;
-grant select on  V_PAYMENT_INFORMATION to FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_PRICE_CATALOG to FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_DISCOUNTS to FINANCE_MANAGER, CUSTOMER;
+grant select on  APP_ADMIN.V_TICKETS_WITH_DISCOUNTS to FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_REFUNDED_TICKETS to FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_YEARLY_MONTHLY_SALES to FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_LEAGUE_TEAM_SALES to FINANCE_MANAGER;
+grant select on  APP_ADMIN.V_PAYMENT_INFORMATION to FINANCE_MANAGER;
 
-grant select on  V_UPCOMING_MATCHES to STADIUM_MANAGER, FINANCE_MANAGER, CUSTOMER, STADIUM_SECURITY;
-grant select on  V_SHOW_SEAT_BOOKING_STATUS to STADIUM_MANAGER;
-grant select on  V_SHOW_SEAT_STATUS_CUSTOMER to CUSTOMER;
+grant select on  APP_ADMIN.V_UPCOMING_MATCHES to STADIUM_MANAGER, FINANCE_MANAGER, CUSTOMER, STADIUM_SECURITY;
+grant select on  APP_ADMIN.V_SHOW_SEAT_BOOKING_STATUS to STADIUM_MANAGER;
+grant select on  APP_ADMIN.V_SHOW_SEAT_STATUS_CUSTOMER to CUSTOMER;
+grant select on  APP_ADMIN.V_USER_TICKETS to CUSTOMER;
