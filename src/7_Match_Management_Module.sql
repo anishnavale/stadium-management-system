@@ -56,8 +56,15 @@ CREATE SEQUENCE SEQ_REF
     MINVALUE 1 
     NOCYCLE
     ORDER;
+
+--Match Management Module : PACK_MATCH_MANAGEMENT BODY
+CREATE OR REPLACE
+PACKAGE BODY PACK_MATCH_MANAGEMENT AS
     
-CREATE OR REPLACE PROCEDURE PROC_ADD_NEW_MATCH(
+--PROCEDURES
+
+--proc : PROC_ADD_NEW_MATCH(in_league_name, in_team1, in_team2, in_start_time, in_end_time, in_match_active)
+PROCEDURE PROC_ADD_NEW_MATCH(
     in_league_name VARCHAR,
     in_team1 VARCHAR,
     in_team2 VARCHAR,
@@ -107,10 +114,10 @@ BEGIN
         dbms_output.put_line('M_End_Time: ' || in_end_time);
         dbms_output.put_line('MatchActive: ' || in_match_active);
         dbms_output.put_line('---------------------------');
-END;
-/
+END PROC_ADD_NEW_MATCH;
 
-CREATE OR REPLACE PROCEDURE PROC_MODIFY_MATCH(
+--proc : PROC_MODIFY_MATCH(in_match_id, in_league_name, in_team1, in_team2, in_start_time, in_end_time, in_match_active)
+PROCEDURE PROC_MODIFY_MATCH(
     in_match_id NUMBER,
     in_league_name VARCHAR,
     in_team1 VARCHAR,
@@ -163,7 +170,8 @@ BEGIN
         dbms_output.put_line('M_End_Time: ' || in_end_time);
         dbms_output.put_line('MatchActive: ' || in_match_active);
         dbms_output.put_line('---------------------------');
-END;
+END PROC_MODIFY_MATCH;
+END PACK_MATCH_MANAGEMENT;
 /
 
 /*
